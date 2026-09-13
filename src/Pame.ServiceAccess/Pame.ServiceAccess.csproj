@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0-windows10.0.19041.0</TargetFramework><Version>0.3.3</Version></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../Pame.Core/Pame.Core.csproj" /><PackageReference Include="System.Management" Version="10.0.9" /><PackageReference Include="System.ServiceProcess.ServiceController" Version="10.0.9" /></ItemGroup>
+</Project>

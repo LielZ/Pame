@@ -1,0 +1,19 @@
+.tools/
+research/
+artifacts/
+**/bin/
+**/obj/
+.vs/
+*.user
+dist/
+# Runtime and personal data must never be published.
+**/BrowserProfile/
+*.db
+*.db-shm
+*.db-wal
+*.log
+.env
+.env.*
+*.pfx
+*.p12
+*.key

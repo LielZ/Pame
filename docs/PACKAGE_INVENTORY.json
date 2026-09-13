@@ -1,0 +1,635 @@
+[
+    {
+        "value":  [
+                      {
+                          "package":  "BlackSharp.Core/1.0.7",
+                          "license":  "MPL-2.0",
+                          "licenseUrl":  "https://licenses.nuget.org/MPL-2.0",
+                          "projectUrl":  "https://github.com/Blacktempel/BlackSharp",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/Blacktempel/BlackSharp",
+                                                 "commit":  "c70b735c6cec123ee8a046ac4a0bc6c606f52cf0"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "DiskInfoToolkit/1.1.2",
+                          "license":  "MPL-2.0",
+                          "licenseUrl":  "https://licenses.nuget.org/MPL-2.0",
+                          "projectUrl":  "https://github.com/Blacktempel/DiskInfoToolkit",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/Blacktempel/DiskInfoToolkit",
+                                                 "commit":  "25319eae5781e75bcf141e844ceab2afe94d40ea"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "HidSharp/2.6.4",
+                          "license":  "LICENSE.txt",
+                          "licenseUrl":  "https://aka.ms/deprecateLicenseUrl",
+                          "projectUrl":  "https://software.seekye.com/hidsharp",
+                          "repository":  [
+
+                                         ],
+                          "localLicenses":  [
+                                                "LICENSE.txt"
+                                            ]
+                      },
+                      {
+                          "package":  "LibreHardwareMonitorLib/0.9.6",
+                          "license":  "MPL-2.0",
+                          "licenseUrl":  "https://licenses.nuget.org/MPL-2.0",
+                          "projectUrl":  "https://github.com/LibreHardwareMonitor/LibreHardwareMonitor",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/LibreHardwareMonitor/LibreHardwareMonitor",
+                                                 "commit":  "3d331e3370efb858411f19511373eff65a218701"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "ManagedNativeWifi/3.0.2",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://github.com/emoacht/ManagedNativeWifi",
+                          "repository":  [
+                                             {
+                                                 "type":  "Git",
+                                                 "url":  "https://github.com/emoacht/ManagedNativeWifi",
+                                                 "commit":  "06e455402d2d8cdcdb00456c45486819852ba830"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "Microsoft.Data.Sqlite/10.0.9",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://docs.microsoft.com/dotnet/standard/data/sqlite/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "901ca941248413c79832d2fdbd709da0c4386353"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "Microsoft.Data.Sqlite.Core/10.0.9",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://docs.microsoft.com/dotnet/standard/data/sqlite/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "901ca941248413c79832d2fdbd709da0c4386353"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "Mono.Posix.NETStandard/1.0.0",
+                          "license":  "",
+                          "licenseUrl":  "https://go.microsoft.com/fwlink/?linkid=869050",
+                          "projectUrl":  "https://go.microsoft.com/fwlink/?linkid=869051",
+                          "repository":  [
+
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "NAudio/2.2.1",
+                          "license":  "license.txt",
+                          "licenseUrl":  "https://aka.ms/deprecateLicenseUrl",
+                          "projectUrl":  "https://github.com/naudio/NAudio",
+                          "repository":  [
+                                             {
+                                                 "url":  "https://github.com/naudio/NAudio"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "license.txt"
+                                            ]
+                      },
+                      {
+                          "package":  "NAudio.Asio/2.2.1",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://github.com/naudio/NAudio",
+                          "repository":  [
+                                             {
+                                                 "url":  "https://github.com/naudio/NAudio"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "NAudio.Core/2.2.1",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://github.com/naudio/NAudio",
+                          "repository":  [
+                                             {
+                                                 "url":  "https://github.com/naudio/NAudio"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "NAudio.Midi/2.2.1",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://github.com/naudio/NAudio",
+                          "repository":  [
+                                             {
+                                                 "url":  "https://github.com/naudio/NAudio"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "NAudio.Wasapi/2.2.1",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://github.com/naudio/NAudio",
+                          "repository":  [
+                                             {
+                                                 "url":  "https://github.com/naudio/NAudio"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "NAudio.WinForms/2.2.1",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://github.com/naudio/NAudio",
+                          "repository":  [
+                                             {
+                                                 "url":  "https://github.com/naudio/NAudio"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "NAudio.WinMM/2.2.1",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://github.com/naudio/NAudio",
+                          "repository":  [
+                                             {
+                                                 "url":  "https://github.com/naudio/NAudio"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "RAMSPDToolkit-NDD/1.4.2",
+                          "license":  "MPL-2.0",
+                          "licenseUrl":  "https://licenses.nuget.org/MPL-2.0",
+                          "projectUrl":  "https://github.com/Blacktempel/RAMSPDToolkit",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/Blacktempel/RAMSPDToolkit",
+                                                 "commit":  "3b47b960e0830fef344624ad5e389675d5f0a1ce"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.android-arm.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.android-arm64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.android-x64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.android-x86.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.linux-arm.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.linux-arm64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.linux-bionic-arm64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.linux-bionic-x64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.linux-musl-arm.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.linux-musl-arm64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.linux-musl-x64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.linux-x64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.maccatalyst-arm64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.maccatalyst-x64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.osx-arm64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "runtime.osx-x64.runtime.native.System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "SQLitePCLRaw.bundle_e_sqlite3/2.1.13",
+                          "license":  "Apache-2.0",
+                          "licenseUrl":  "https://licenses.nuget.org/Apache-2.0",
+                          "projectUrl":  "",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/ericsink/SQLitePCL.raw"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "SQLitePCLRaw.core/2.1.13",
+                          "license":  "Apache-2.0",
+                          "licenseUrl":  "https://licenses.nuget.org/Apache-2.0",
+                          "projectUrl":  "",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/ericsink/SQLitePCL.raw"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "SQLitePCLRaw.lib.e_sqlite3/2.1.13",
+                          "license":  "Apache-2.0",
+                          "licenseUrl":  "https://licenses.nuget.org/Apache-2.0",
+                          "projectUrl":  "",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/ericsink/SQLitePCL.raw"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "SQLitePCLRaw.provider.e_sqlite3/2.1.13",
+                          "license":  "Apache-2.0",
+                          "licenseUrl":  "https://licenses.nuget.org/Apache-2.0",
+                          "projectUrl":  "",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/ericsink/SQLitePCL.raw"
+                                             }
+                                         ],
+                          "localLicenses":  [
+
+                                            ]
+                      },
+                      {
+                          "package":  "System.IO.FileSystem.AccessControl/5.0.0",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://github.com/dotnet/runtime",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "git://github.com/dotnet/runtime",
+                                                 "commit":  "cf258a14b70ad9069470a108f13765e0e5988f51"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "LICENSE.TXT",
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "System.IO.Ports/10.0.3",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "c2435c3e0f46de784341ac3ed62863ce77e117b4"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      },
+                      {
+                          "package":  "System.Management/10.0.9",
+                          "license":  "MIT",
+                          "licenseUrl":  "https://licenses.nuget.org/MIT",
+                          "projectUrl":  "https://dot.net/",
+                          "repository":  [
+                                             {
+                                                 "type":  "git",
+                                                 "url":  "https://github.com/dotnet/dotnet",
+                                                 "commit":  "901ca941248413c79832d2fdbd709da0c4386353"
+                                             }
+                                         ],
+                          "localLicenses":  [
+                                                "THIRD-PARTY-NOTICES.TXT"
+                                            ]
+                      }
+                  ],
+        "Count":  40
+    },
+    {
+        "package":  "Microsoft.Web.WebView2/1.0.4191.47",
+        "license":  "Microsoft WebView2 SDK license",
+        "licenseUrl":  "https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.4191.47/License",
+        "projectUrl":  "https://developer.microsoft.com/en-us/microsoft-edge/webview2/",
+        "repository":  [
+
+                       ],
+        "localLicenses":  [
+                              "licenses/WebView2-LICENSE.txt",
+                              "licenses/WebView2-NOTICE.txt"
+                          ]
+    }
+]

@@ -1,0 +1,26 @@
+{
+  "sources": [
+    {
+      "file": "ChatGPT Image Sep 13, 2026, 01_43_16 PM.png",
+      "sha256": "08b24723fa2dba26b9af417362ee32a11646d27e348ef4a08879e90b8eb95673",
+      "source": "Artwork supplied by the user for Pame"
+    },
+    {
+      "file": "ChatGPT Image Sep 13, 2026, 01_44_58 PM.png",
+      "sha256": "8156abe26e100181013782928bfae0e5c4cf3d1a761d11cf9b5687252b0498c9",
+      "source": "Artwork supplied by the user for Pame"
+    }
+  ],
+  "iconSizes": [
+    16,
+    20,
+    24,
+    32,
+    40,
+    48,
+    64,
+    96,
+    128,
+    256
+  ]
+}

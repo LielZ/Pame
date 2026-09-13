@@ -1,0 +1,214 @@
+[
+  {
+    "file": "Icons/activity.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/activity.svg"
+  },
+  {
+    "file": "Icons/arrow-right.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/arrow-right.svg"
+  },
+  {
+    "file": "Icons/battery-charging.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/battery-charging.svg"
+  },
+  {
+    "file": "Icons/battery-full.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/battery-full.svg"
+  },
+  {
+    "file": "Icons/battery-low.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/battery-low.svg"
+  },
+  {
+    "file": "Icons/bluetooth.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/bluetooth.svg"
+  },
+  {
+    "file": "Icons/camera.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/camera.svg"
+  },
+  {
+    "file": "Icons/check.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/check.svg"
+  },
+  {
+    "file": "Icons/chevron-right.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/chevron-right.svg"
+  },
+  {
+    "file": "Icons/circuit-board.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/circuit-board.svg"
+  },
+  {
+    "file": "Icons/clock.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/clock.svg"
+  },
+  {
+    "file": "Icons/cpu.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/cpu.svg"
+  },
+  {
+    "file": "Icons/download.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/download.svg"
+  },
+  {
+    "file": "Icons/ellipsis.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/ellipsis.svg"
+  },
+  {
+    "file": "Icons/folder.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/folder.svg"
+  },
+  {
+    "file": "Icons/gamepad-2.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/gamepad-2.svg"
+  },
+  {
+    "file": "Icons/hard-drive.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/hard-drive.svg"
+  },
+  {
+    "file": "Icons/headphones.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/headphones.svg"
+  },
+  {
+    "file": "Icons/heart.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/heart.svg"
+  },
+  {
+    "file": "Icons/house.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/house.svg"
+  },
+  {
+    "file": "Icons/layout-grid.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/layout-grid.svg"
+  },
+  {
+    "file": "Icons/log-out.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/log-out.svg"
+  },
+  {
+    "file": "Icons/memory-stick.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/memory-stick.svg"
+  },
+  {
+    "file": "Icons/monitor.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/monitor.svg"
+  },
+  {
+    "file": "Icons/moon.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/moon.svg"
+  },
+  {
+    "file": "Icons/pause.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/pause.svg"
+  },
+  {
+    "file": "Icons/play.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/play.svg"
+  },
+  {
+    "file": "Icons/plus.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/plus.svg"
+  },
+  {
+    "file": "Icons/power.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/power.svg"
+  },
+  {
+    "file": "Icons/refresh-cw.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/refresh-cw.svg"
+  },
+  {
+    "file": "Icons/search.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/search.svg"
+  },
+  {
+    "file": "Icons/settings.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/settings.svg"
+  },
+  {
+    "file": "Icons/shield-check.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/shield-check.svg"
+  },
+  {
+    "file": "Icons/shopping-bag.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/shopping-bag.svg"
+  },
+  {
+    "file": "Icons/sliders-horizontal.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/sliders-horizontal.svg"
+  },
+  {
+    "file": "Icons/sparkles.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/sparkles.svg"
+  },
+  {
+    "file": "Icons/thermometer.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/thermometer.svg"
+  },
+  {
+    "file": "Icons/trash-2.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/trash-2.svg"
+  },
+  {
+    "file": "Icons/users.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/users.svg"
+  },
+  {
+    "file": "Icons/volume-2.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/volume-2.svg"
+  },
+  {
+    "file": "Icons/volume-x.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/volume-x.svg"
+  },
+  {
+    "file": "Icons/wifi.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/wifi.svg"
+  },
+  {
+    "file": "Icons/x.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/x.svg"
+  },
+  {
+    "file": "Icons/zap.png",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/0.468.0/icons/zap.svg"
+  },
+  {
+    "file": "Stores/battledotnet.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/battledotnet.svg"
+  },
+  {
+    "file": "Stores/ea.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/ea.svg"
+  },
+  {
+    "file": "Stores/epicgames.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/epicgames.svg"
+  },
+  {
+    "file": "Stores/gogdotcom.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/gogdotcom.svg"
+  },
+  {
+    "file": "Stores/riotgames.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/riotgames.svg"
+  },
+  {
+    "file": "Stores/rockstargames.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/rockstargames.svg"
+  },
+  {
+    "file": "Stores/steam.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/steam.svg"
+  },
+  {
+    "file": "Stores/ubisoft.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/ubisoft.svg"
+  },
+  {
+    "file": "Stores/xbox.png",
+    "source": "https://raw.githubusercontent.com/simple-icons/simple-icons/11.15.0/icons/xbox.svg"
+  }
+]

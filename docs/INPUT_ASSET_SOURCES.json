@@ -1,0 +1,98 @@
+[
+    {
+        "File":  "Prompts/PlayStation-menu.png",
+        "Source":  "Kenney Input Prompts 1.5A/PlayStation Series/Double/playstation5_button_options.png"
+    },
+    {
+        "File":  "Prompts/PlayStation-favorite.png",
+        "Source":  "Kenney Input Prompts 1.5A/PlayStation Series/Double/playstation_button_square.png"
+    },
+    {
+        "File":  "Prompts/PlayStation-next.png",
+        "Source":  "Kenney Input Prompts 1.5A/PlayStation Series/Double/playstation_trigger_r1.png"
+    },
+    {
+        "File":  "Prompts/PlayStation-search.png",
+        "Source":  "Kenney Input Prompts 1.5A/PlayStation Series/Double/playstation_button_triangle.png"
+    },
+    {
+        "File":  "Prompts/PlayStation-back.png",
+        "Source":  "Kenney Input Prompts 1.5A/PlayStation Series/Double/playstation_button_circle.png"
+    },
+    {
+        "File":  "Prompts/PlayStation-previous.png",
+        "Source":  "Kenney Input Prompts 1.5A/PlayStation Series/Double/playstation_trigger_l1.png"
+    },
+    {
+        "File":  "Prompts/PlayStation-device.png",
+        "Source":  "Kenney Input Prompts 1.5A/PlayStation Series/Double/controller_playstation5.png"
+    },
+    {
+        "File":  "Prompts/PlayStation-confirm.png",
+        "Source":  "Kenney Input Prompts 1.5A/PlayStation Series/Double/playstation_button_cross.png"
+    },
+    {
+        "File":  "Prompts/Switch-menu.png",
+        "Source":  "Kenney Input Prompts 1.5A/Nintendo Switch/Double/switch_button_plus.png"
+    },
+    {
+        "File":  "Prompts/Switch-favorite.png",
+        "Source":  "Kenney Input Prompts 1.5A/Nintendo Switch/Double/switch_button_y.png"
+    },
+    {
+        "File":  "Prompts/Switch-next.png",
+        "Source":  "Kenney Input Prompts 1.5A/Nintendo Switch/Double/switch_button_r.png"
+    },
+    {
+        "File":  "Prompts/Switch-search.png",
+        "Source":  "Kenney Input Prompts 1.5A/Nintendo Switch/Double/switch_button_x.png"
+    },
+    {
+        "File":  "Prompts/Switch-back.png",
+        "Source":  "Kenney Input Prompts 1.5A/Nintendo Switch/Double/switch_button_a.png"
+    },
+    {
+        "File":  "Prompts/Switch-previous.png",
+        "Source":  "Kenney Input Prompts 1.5A/Nintendo Switch/Double/switch_button_l.png"
+    },
+    {
+        "File":  "Prompts/Switch-device.png",
+        "Source":  "Kenney Input Prompts 1.5A/Nintendo Switch/Double/controller_switch_pro.png"
+    },
+    {
+        "File":  "Prompts/Switch-confirm.png",
+        "Source":  "Kenney Input Prompts 1.5A/Nintendo Switch/Double/switch_button_b.png"
+    },
+    {
+        "File":  "Prompts/Xbox-menu.png",
+        "Source":  "Kenney Input Prompts 1.5A/Xbox Series/Double/xbox_button_menu.png"
+    },
+    {
+        "File":  "Prompts/Xbox-favorite.png",
+        "Source":  "Kenney Input Prompts 1.5A/Xbox Series/Double/xbox_button_x.png"
+    },
+    {
+        "File":  "Prompts/Xbox-next.png",
+        "Source":  "Kenney Input Prompts 1.5A/Xbox Series/Double/xbox_rb.png"
+    },
+    {
+        "File":  "Prompts/Xbox-search.png",
+        "Source":  "Kenney Input Prompts 1.5A/Xbox Series/Double/xbox_button_y.png"
+    },
+    {
+        "File":  "Prompts/Xbox-back.png",
+        "Source":  "Kenney Input Prompts 1.5A/Xbox Series/Double/xbox_button_b.png"
+    },
+    {
+        "File":  "Prompts/Xbox-previous.png",
+        "Source":  "Kenney Input Prompts 1.5A/Xbox Series/Double/xbox_lb.png"
+    },
+    {
+        "File":  "Prompts/Xbox-device.png",
+        "Source":  "Kenney Input Prompts 1.5A/Xbox Series/Double/controller_xboxseries.png"
+    },
+    {
+        "File":  "Prompts/Xbox-confirm.png",
+        "Source":  "Kenney Input Prompts 1.5A/Xbox Series/Double/xbox_button_a.png"
+    }
+]

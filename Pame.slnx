@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Pame.App/Pame.App.csproj" />
+    <Project Path="src/Pame.Core/Pame.Core.csproj" />
+    <Project Path="src/Pame.Windows/Pame.Windows.csproj" />
+    <Project Path="src/Pame.ServiceAccess/Pame.ServiceAccess.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Pame.Diagnostics/Pame.Diagnostics.csproj" />
+    <Project Path="tests/Pame.TestGame/Pame.TestGame.csproj" />
+    <Project Path="tests/Pame.Tests/Pame.Tests.csproj" />
+  </Folder>
+</Solution>

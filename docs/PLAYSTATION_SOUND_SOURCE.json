@@ -1,0 +1,23 @@
+{
+  "repository": "https://api.github.com/repos/TheBenny/es-theme-RG351V-RetroBenny-PS5",
+  "commit": "05faa0af693bdb576155d3293b60e7b6760ad93b",
+  "files": [
+    "game_scroll.wav",
+    "system_scroll.wav",
+    "systemselect.wav",
+    "back.wav",
+    "game_back.wav",
+    "menu.wav",
+    "game_launch.wav",
+    "se_sys_cursor.wav",
+    "se_sys_click_game.wav"
+  ],
+  "mapping": {
+    "move": "se_sys_cursor.wav",
+    "page": "system_scroll.wav",
+    "select": "se_sys_click_game.wav",
+    "back": "back.wav",
+    "open": "se_sys_click_game.wav"
+  },
+  "notice": "Community PS5 recordings installed locally at the user request. Sony sound rights retained. These files are not part of the redistributable Pame installer."
+}
