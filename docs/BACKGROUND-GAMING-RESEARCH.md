@@ -1,70 +1,74 @@
-# מחקר: פעילות רקע בזמן משחק ב־Pame
+# Background activity during games: research notes
 
-13 בספטמבר 2026. מחקר אינטרנט, סקירת הקוד ומדידה לקריאה בלבד במחשב הפיתוח. לא הופסקו שירותים או אפליקציות ולא שונו הגדרות Windows במסגרת המחקר. זו הצעת מימוש; גרסה 0.3.2 עדיין אינה מבצעת את הפעולות המתוארות כאן.
+September 13, 2026. Internet research, code review and read-only measurements on the development PC. No services or applications were stopped and no Windows settings were changed during this research. This document records the proposal before implementation; version 0.3.2 did not perform the actions described here. For the subsequent implementation, see [0.3.3 validation](VALIDATION-0.3.3.md).
 
-**המסקנה:** אפשר להציע עצירה זמנית של רשימה מצומצמת של שירותים, לצד התאמות לאפליקציות שהמשתמש בוחר. יש למדוד פעילות בפועל. עצירת שירות זמין אינה מעידה שהוא מיותר, והפעלה מחדש של אפליקציה אינה מבטיחה שחזור של תוכנה, שיחה או עבודה שלא נשמרה. Microsoft ממליצה לאתר צרכני משאבים ולצמצם אפליקציות רקע שאינן בשימוש. [הנחיות ביצועים של Microsoft](https://support.microsoft.com/en-gb/windows/tips-to-improve-pc-performance-in-windows-b3b3ef5b-5953-fb6a-2528-4bbed82fba96).
+**Conclusion:** Pame can offer temporary stops for a narrow list of services, alongside adjustments to applications the user chooses. Decisions should follow measured activity. A service accepting a Stop request does not mean it is unnecessary, and reopening an application does not guarantee recovery of its state, calls or unsaved work. Microsoft recommends identifying resource consumers and reducing unused background applications. [Microsoft performance guidance](https://support.microsoft.com/en-gb/windows/tips-to-improve-pc-performance-in-windows-b3b3ef5b-5953-fb6a-2528-4bbed82fba96).
 
-**מה נמצא במחשב הזה**
+## Development PC measurements
 
-CPU נמדד במשך כ־5 שניות, מנורמל ל־16 מעבדים לוגיים. בהמשך נאספה מדידת Private Working Set: זיכרון פרטי שנמצא ב־RAM, בנפרד מ־Private Bytes שמייצג הקצאה ולא בהכרח זיכרון פיזי. אלה שתי דגימות בזמנים שונים, ללא משחק שנבחר כבנצ׳מרק. אין כאן הוכחה לשיפור FPS.
+CPU usage was sampled for approximately five seconds and normalized across 16 logical processors. A later sample collected Private Working Set: private memory resident in RAM, distinct from Private Bytes, which measures allocation rather than necessarily physical memory. These were two separate samples, with no selected game benchmark. They do not establish an FPS improvement.
 
-| רכיב | מצב | זיכרון פרטי ב־RAM, MiB | CPU בדגימה הקצרה |
-|---|---|---:|---:|
-| Windows Search, תהליך SearchIndexer | פועל | 33.8 | 0.00% בעיגול |
-| DiagTrack | פועל | 38.8 | 0.00% בעיגול |
-| Print Spooler | פועל | 1.3 | 0.00% בעיגול |
-| SysMain | פועל | 1.5 | 0.00% בעיגול |
-| MapsBroker | כבר עצור | — | — |
-| WMPNetworkSvc | כבר עצור | — | — |
+| Component | State | Private resident memory, MiB | CPU in the short sample |
+| :--- | :--- | ---: | ---: |
+| Windows Search / SearchIndexer | Running | 33.8 | 0.00%, rounded |
+| DiagTrack | Running | 38.8 | 0.00%, rounded |
+| Print Spooler | Running | 1.3 | 0.00%, rounded |
+| SysMain | Running | 1.5 | 0.00%, rounded |
+| MapsBroker | Already stopped | — | — |
+| WMPNetworkSvc | Already stopped | — | — |
 
-שלושת השירותים הראשונים החזיקו יחד 73.9MiB; תהליכי העזר של החיפוש אינם כלולים במספר הזה. לא נמצאו להם שירותים תלויים פעילים בבדיקה, ושלושתם מקבלים בקשת Stop אך אינם תומכים ב־Pause. יש לבדוק את התנאים מחדש בכל הפעלה. לכל אחד היה תהליך מארח נפרד בזמן הבדיקה; אין לייחס את כל זיכרון svchost לשירות אחד כאשר הוא משותף.
+The first three services held 73.9 MiB combined, excluding Search helper processes. None had running dependent services at the time of inspection. All three accepted Stop requests but did not support Pause. These conditions must be checked again each session. Each had a separate host process during measurement; all memory in a shared svchost process must not be attributed to one service.
 
-Windows דיווח על כ־18.29GiB זמינים מתוך 31.15GiB נגישים למערכת. להשוואת סדרי גודל בלבד: תהליכי steamwebhelper החזיקו יחד 451.2MiB; Edge כ־239.6MiB; EADesktop ותהליכי EACefSubProcess כ־354.9MiB. המספרים אינם תחזית של זיכרון שישתחרר, אינם כוללים את כל תלויות המוצרים, ואינם סיבה לסגור חנות שהמשחק תלוי בה. שם msedgewebview2 משמש כמה מוצרים ואינו מזהה בעלות מספקת.
+Windows reported approximately 18.29 GiB available out of 31.15 GiB accessible to the system. For scale only, steamwebhelper processes held 451.2 MiB combined, Edge approximately 239.6 MiB, and EADesktop with EACefSubProcess approximately 354.9 MiB. These numbers do not predict recoverable RAM, do not include every product dependency, and do not justify closing a store required by the game. The msedgewebview2 process name is shared by multiple products and is insufficient to establish ownership.
 
-קובצי הנתונים: [דגימת תהליכים ושירותים](/C:/Users/lieln/Documents/Pame/artifacts/background-research-snapshot.json), [זיכרון פרטי resident](/C:/Users/lieln/Documents/Pame/artifacts/background-research-resident.json).
+Local measurement files, excluded from the public repository: `artifacts/background-research-snapshot.json` and `artifacts/background-research-resident.json`.
 
-**מועמדים ותנאים**
+## Service candidates and conditions
 
-הקטלוג הרשמי של Microsoft מסביר את תפקידי השירותים, אך מיועד ל־Windows IoT Enterprise ולמכשירים ייעודיים. הוא מסייע להבין תלות ופגיעה בתכונות; הוא אינו בדיקת ביצועים או אישור גורף למחשב משחקים רגיל. הסיווג הבא הוא המלצת תכנון ל־Pame. [קטלוג שירותי Microsoft](https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/optimize/services).
+Microsoft's service catalog describes service responsibilities, but targets Windows IoT Enterprise and dedicated devices. It helps identify dependencies and feature impact; it is neither a performance benchmark nor blanket approval for a regular gaming PC. The following classifications are design recommendations for Pame. [Microsoft service catalog](https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/optimize/services).
 
-| רכיב | הצעה ל־Pame | מחיר זמני / תנאי |
-|---|---|---|
-| WSearch | אפשרות מתקדמת לעצירה ולהפעלה מחדש | עדכון האינדקס וחיפוש בתוכן עלולים להיפגע; רק אם פעיל ומפריע |
-| DiagTrack | אפשרות לבחירה, בעדיפות נמוכה | איסוף ושידור אבחון ייפסקו; חסכון קטן בדגימה הנוכחית |
-| Spooler | אפשרות לבחירה כשאין הדפסה | אין הדפסה, כולל שימושים בהדפסה ל־PDF; לדלג כשיש עבודות בתור או שלא ניתן לבדוק |
-| MapsBroker | לשקול רק אם פועל ויש שימוש במשאבים | זמינות מפות שהורדו עלולה להיפגע; אצלך כבר עצור |
-| WMPNetworkSvc | לשקול רק ללא הזרמת מדיה ברשת | שיתוף ספריית המדיה נפסק; אצלך כבר עצור |
-| SysMain | להשאיר פעיל | שירות שנועד לשיפור ביצועים; לא נמצא עומס שמצדיק ניסוי בעצירה |
+| Component | Proposed treatment | Temporary impact / condition |
+| :--- | :--- | :--- |
+| WSearch | Advanced stop-and-restart option | Index updates and content search may be affected; only when running and causing interference. |
+| DiagTrack | Optional, low-priority candidate | Diagnostic collection and transmission stop; the measured potential saving was small. |
+| Spooler | Optional when no printing is in progress | Printing, including print-to-PDF uses, is unavailable. Skip if jobs are queued or the queue cannot be checked. |
+| MapsBroker | Consider only when running and consuming resources | Downloaded map availability may be affected; already stopped on the sampled PC. |
+| WMPNetworkSvc | Consider only without network media streaming | Media library sharing stops; already stopped on the sampled PC. |
+| SysMain | Keep running | Intended to improve performance; no measured load justified a stop experiment. |
 
-Windows Search עשוי כבר להשהות אינדוקס בזמן Game Mode. לכן יש לברר תחילה אם יש בכלל עבודת אינדוקס לצמצם. התיעוד אומר שזה מצב נפוץ, לא הבטחה שכל משחק גורם להשהיה. [מצבי אינדוקס וביצועי Windows Search](https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/windows-search-performance-issues).
+Windows Search may already pause indexing during Game Mode. Check whether there is indexing work to reduce first. The documentation describes a common condition, not a guarantee that every game pauses indexing. [Windows Search indexing states and performance](https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/windows-search-performance-issues).
 
-**אפליקציות: לשמר מצב כשהדבר אפשרי**
+## Applications: preserve state where possible
 
-- OneDrive: למוצר יש Pause ו־Resume רשמיים. ניתן להשתמש בכך בעת פעילות סנכרון שאינה נדרשת למשחק, ולחדש לאחריו. אין להניח שתיעוד ממשק המשתמש מספק API חיצוני: לא אותר במחקר חוזה ציבורי מתועד שמספיק לאוטומציה אמינה מתוך Pame. יש לפתור זאת לפני הבטחת שילוב אוטומטי, ולשמור על זמינות קובצי משחק ושמירות בענן. [השהיה וחידוש של OneDrive](https://support.microsoft.com/en-us/onedrive/how-to-pause-and-resume-onedrive-sync).
-- Edge: Sleeping Tabs משמר כרטיסיות ומצמצם פעילות ומשאבים. יש חריגים כגון פעילות שהדפדפן משמר בכוונה. זו אפשרות של הדפדפן; אין להסיק ממנה שמותר להקפיא את כל תהליכי הדפדפן מבחוץ. [תכונות הביצועים של Edge](https://support.microsoft.com/en-us/edge/learn-about-performance-features-in-microsoft-edge).
-- אפליקציות נבחרות: אפשר לבחון הורדת עדיפות ו־EcoQoS, ולשחזר את הערכים המדויקים לאחר המשחק. זה מצמצם תחרות על CPU; אינו סוגר את האפליקציה ואינו מבטיח פינוי RAM. יש להחריג תהליכי קול, שלט, הקלטה ושידור הנחוצים למשתמש. Windows מתעד קריאה וכתיבה של מצב PowerThrottling. [GetProcessInformation](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessinformation), [SetProcessInformation](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessinformation), [QoS](https://learn.microsoft.com/en-us/windows/win32/procthread/quality-of-service).
-- סגירה ופתיחה מחדש: אפשרות נפרדת, מפורשת ומותאמת למוצר. לא להציג אותה כ״השהיה״. חלונות, עריכות, שיחות והורדות עשויים שלא לחזור למצב הקודם; אין להבטיח שחזור על סמך פתיחת EXE בלבד. חנויות אחרות יכולות להיות מועמדות רק לאחר בדיקת משחקים פעילים, DRM, עדכונים וסנכרון.
+- **OneDrive:** The product provides Pause and Resume controls. These may help when active synchronization is unnecessary for the game. UI documentation does not establish an external API: this research found no documented public contract sufficient for reliable automation from Pame. Resolve that before promising an automatic integration, and preserve access to game files and cloud saves. [Pause and resume OneDrive](https://support.microsoft.com/en-us/onedrive/how-to-pause-and-resume-onedrive-sync).
+- **Edge:** Sleeping Tabs preserves tabs while reducing activity and resource use, with exceptions for activity the browser intentionally retains. This is a browser feature, not a basis for externally freezing every browser process. [Edge performance features](https://support.microsoft.com/en-us/edge/learn-about-performance-features-in-microsoft-edge).
+- **Selected applications:** Consider lower priority and EcoQoS, restoring the exact previous values afterwards. This can reduce CPU competition; it does not close the application or guarantee released RAM. Exclude audio, controller, recording and broadcasting processes needed by the user. Windows documents reading and writing PowerThrottling state. [GetProcessInformation](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessinformation), [SetProcessInformation](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessinformation), [Quality of Service](https://learn.microsoft.com/en-us/windows/win32/procthread/quality-of-service).
+- **Close and reopen:** Make this a separate, explicit, product-specific option. Do not label it as Pause. Windows, edits, calls and downloads may not return to their previous state; launching an executable alone cannot guarantee restoration. Other stores are candidates only after checking active games, DRM, updates and synchronization.
 
-הקפאת threads כללית אינה בסיס מתאים לשחזור אמין: thread יכול להחזיק מנעולים שמשתמשים בהם רכיבים אחרים. Microsoft מתארת את SuspendThread בעיקר ככלי debugger ומזהירה מ־deadlock. [SuspendThread](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread).
+General thread suspension is unsuitable as the basis for reliable restoration: a thread may hold locks required by other components. Microsoft describes SuspendThread primarily as a debugger tool and warns about deadlocks. [SuspendThread](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread).
 
-**גבולות למימוש הראשון**
+## Boundaries for the first implementation
 
-ההמלצה ההנדסית היא להגן על Defender ושירותי אבטחה; רשת, DNS ו־DHCP; Bluetooth, HID, קול ודרייברים; RPC, DCOM, WMI, Task Scheduler ו־Event Log; DWM ו־Explorer; אנטי־צ׳יט, שירותי Xbox/Gaming Services, החנות והתלויות של המשחק הנוכחי. גם Windows Update, BITS, Delivery Optimization ומתקיני רכיבים יישארו מחוץ לרשימת העצירה של הגרסה הראשונה. אם הורדות מפריעות, יש לטפל בהן דרך מנגנון התזמון או ההשהיה של המוצר. Pame עצמו ושומר השחזור שלו חייבים להישאר פעילים.
+Protect Defender and security services; networking, DNS and DHCP; Bluetooth, HID, audio and drivers; RPC, DCOM, WMI, Task Scheduler and Event Log; DWM and Explorer; anti-cheat, Xbox/Gaming Services, and the current game's store and dependencies. Keep Windows Update, BITS, Delivery Optimization and component installers outside the initial stop list. Address disruptive downloads through the product's scheduling or pause mechanisms. Pame and its recovery guardian must remain active.
 
-אין להשתמש בהריגת svchost, ריקון RAM מלאכותי, עצירת שירותים לפי גודל זיכרון בלבד או ברשימה גורפת של שמות ״bloatware״. הורדת מספר התהליכים אינה מדד לשיפור המשחק.
+Do not kill svchost processes, artificially empty RAM, select services solely by memory size, or apply a blanket list of “bloatware” process names. Fewer processes is not a measure of better game performance.
 
-**מימוש ושחזור מוצעים — טרם נבנו**
+## Proposed implementation and recovery
 
-1. מסך שניתן להפעיל כולו בשלט, עם בחירה לכל רכיב: להשאיר, להאט, להשהות דרך המוצר, או לעצור שירות. ברירת המחדל הראשונה אינה מסמנת פעולות עצירה. להציג משמעות, זמינות, מדידה אחרונה והאם נדרשת הרשאת מנהל.
-2. לזהות את המשחק והתלויות לפני הפעולות. לבצע השהיית שירותים רק לאחר זיהוי התהליך האמיתי, כדי לא לעכב חנויות, התקנה ואנטי־צ׳יט בהפעלה.
-3. לשמור יומן אטומי לפני כל שינוי: מזהה סשן ובעלות, מצב קודם, פעולה מתוכננת, אישור מצב לאחר הפעולה ושגיאות. לשירותים — שם מוגדר מראש ומצב מקורי; לתהליכים — PID, זמן יצירה, נתיב וזהות מוצר, עדיפות ומסכות QoS מקוריות.
-4. להשתמש ב־Service Control Manager, לבדוק CanStop ומצב יציב, ולדלג כשיש שירותים תלויים פעילים. ללא שינוי StartupType וללא עצירה גורפת של תלויות. SCM דוחה עצירה כאשר יש תלויות פעילות; זו סיבה לדילוג במוצר הזה. [עצירת שירות באמצעות SCM](https://learn.microsoft.com/en-us/windows/win32/services/stopping-a-service).
-5. שירותים שדורשים הרשאות ינוהלו באמצעות רכיב מוגבל ומורשה עם רשימת פעולות ושמות קבועה. אין להעניק הרשאות לכל ה־UI או להעביר פקודות שרירותיות ליומן שחזור. שומר השחזור הנוכחי של שולחן העבודה אינו מספיק אוטומטית לשירותים מוגנים.
-6. לשחזר אחרי יציאה רגילה, Stop, כשל הפעלה, סגירת Pame וקריסה. קודם להחזיר את ממשק Pame; להשלים שחזור בנפרד. להפעיל רק שירות שהיה פעיל ו־Pame עצר, לכבד שינוי מתערב של המשתמש ככל שניתן לזהותו, ולהשאיר ביומן פעולות שנכשלו. לאחר אתחול לא להחיות PID ישן או אפליקציות סגורות; להבחין בין סשן קודם לבין מדיניות ההפעלה של Windows.
-7. להציג מה שוחזר ומה נכשל. אין להציג ״הכול חזר״ רק משום שנשלחה בקשת Start. לשמור אפשרות שחזור ידנית במקרה של שינוי הרשאות או שירות שאינו מוכן.
+These steps describe the design at the time of research, before implementation.
 
-נקודות החיבור בקוד: `GameSessionService.Run` לאחר זיהוי תהליך וב־finally; הרחבה ייעודית של מנגנון recovery לצד `OptimizationService`; זיהוי תהליכים בסגנון `SavedProcessState.Matches`; Guardian נפרד עם הרשאות מתאימות לפעולות השירות. ההגדרה הקיימת GamingMode ב־Pame מפעילה תוכנית חשמל; היא אינה הוכחה שמתג Game Mode של Windows מופעל. ערכי GameBar שנבדקו לא סיפקו תשובה מכרעת למצב המתג.
+1. Provide a controller-operated screen with choices per component: leave running, reduce priority, pause through the product, or stop a service. The initial proposal selects no stop actions by default. Explain impact, availability, last measurement and administrator requirements.
+2. Identify the game and its dependencies before acting. Stop services only after detecting the actual game process, avoiding delays to stores, installation and anti-cheat startup.
+3. Write an atomic journal before every change: session identity and ownership, previous state, intended action, verified post-action state and errors. For services, record an allowlisted name and original state. For processes, record PID, creation time, path, product identity, original priority and QoS masks.
+4. Use Service Control Manager, check CanStop and stable state, and skip services with running dependents. Do not change StartupType or stop dependencies broadly. SCM rejecting a stop because of active dependents is a reason for Pame to skip that action. [Stopping a service through SCM](https://learn.microsoft.com/en-us/windows/win32/services/stopping-a-service).
+5. Manage privileged service operations through a narrowly authorized component with fixed service names and actions. Do not elevate the entire UI or put arbitrary commands in a recovery journal. The desktop recovery guardian does not automatically provide sufficient access for protected services.
+6. Restore after normal game exit, Stop, launch failure, Pame shutdown and crashes. Return the Pame interface first and finish recovery separately. Start only a service that was previously running and that Pame actually stopped. Respect intervening user changes where observable, and retain failed actions in the journal. After reboot, do not revive old PIDs or closed applications; distinguish a previous session from Windows startup policy.
+7. Show what was restored and what failed. Sending a Start request alone is insufficient to report successful recovery. Keep manual retry available for changed permissions or services that are not ready.
 
-**איך לקבוע אם זה משתלם**
+Integration points identified in the reviewed code: `GameSessionService.Run` after process detection and in its `finally` block; dedicated recovery alongside `OptimizationService`; process matching equivalent to `SavedProcessState.Matches`; and a separate guardian with suitable permissions for service actions. Pame's existing GamingMode setting selected a power plan; it did not establish that Windows Game Mode was enabled. The inspected GameBar registry values did not conclusively identify that switch's state.
 
-להשוות כמה הרצות של אותו משחק ואותו תרחיש, עם טמפרטורה והגדרות קבועות: FPS ממוצע, 1% lows, התפלגות זמני פריים, CPU, זיכרון זמין ועומס דיסק. לבדוק תחילה כל פעולה בנפרד, כולל זמן השחזור והעומס שאחריו. נדרשות בדיקות מצב קודם עצור, תלות פעילה, דחיית הרשאה, שירות שאינו נעצר, החלפת PID, שינוי משתמש תוך כדי, קריסת Pame וכשל שחזור. לא בוצעו במחקר ניסויי עצירה או השוואות FPS; התועלת המעשית עדיין לא נמדדה.
+## Measuring whether it helps
+
+Compare several runs of the same game and scenario with controlled temperature and settings: average FPS, 1% lows, frame-time distribution, CPU, available memory and disk load. Test each action separately first, including recovery time and subsequent load. Exercise previously stopped services, active dependencies, denied permissions, stop timeouts, PID reuse, intervening user changes, Pame crashes and recovery failures.
+
+No service-stop experiments or FPS comparisons were performed during this research. Practical performance benefits had not been measured.

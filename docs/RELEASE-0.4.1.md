@@ -1,28 +1,60 @@
-# Pame 0.4.1 · Public alpha
+<p align="center">
+  <img src="https://raw.githubusercontent.com/LielZ/Pame/main/docs/images/pame-banner.svg" alt="Pame — Your PC. Your console." width="100%">
+</p>
 
-Pame turns a Windows gaming PC into a controller-friendly console experience: a fullscreen game library, store launching, game artwork during transitions, automatic return after play, an embedded browser and a Quick menu for system and media controls.
+<p align="center">
+  <strong><a href="https://github.com/LielZ/Pame/releases/download/v0.4.1/Pame-Setup-0.4.1-x64.exe">Download Pame 0.4.1 for Windows</a></strong>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/LielZ/Pame/releases/download/v0.4.1/SHA256SUMS.txt">SHA-256 checksum</a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/LielZ/Pame/blob/main/docs/USER_GUIDE.md">User guide</a>
+</p>
 
-## Download and install
+<p align="center"><sub>PUBLIC ALPHA &nbsp; / &nbsp; WINDOWS 10 2004+ &nbsp; / &nbsp; x64</sub></p>
 
-- **[Download Pame-Setup-0.4.1-x64.exe](https://github.com/LielZ/Pame/releases/download/v0.4.1/Pame-Setup-0.4.1-x64.exe)**
-- [SHA-256 checksums](https://github.com/LielZ/Pame/releases/download/v0.4.1/SHA256SUMS.txt)
-- [Source and setup guide](https://github.com/LielZ/Pame#readme)
+Your PC games, stores, media and system controls in a fullscreen interface made for a controller. Pame puts your library in one place, makes the transition into a game feel like a console, and brings you home when you're done.
 
-Windows 10 version 2004 or newer, x64. The installer includes .NET and installs WebView2 if needed. Existing Pame users can run this installer over their current version; library, settings and local browser data are preserved. Main setup runs for your user account. Optional Windows service access requires an administrator confirmation during setup and is off by default.
+![Pame 0.4.1 home screen with a featured game, recently played games and store shortcuts](https://raw.githubusercontent.com/LielZ/Pame/main/docs/images/home.png)
 
-This is an unsigned alpha release. Read the [known limitations](https://github.com/LielZ/Pame/blob/v0.4.1/KNOWN_LIMITATIONS.md) before using it as your main gaming interface.
+<p align="center"><sub>Captured directly from Pame 0.4.1. Games shown are not included.</sub></p>
 
-## In this release
+## What's new in 0.4.1
 
-- Quick menu Now Playing card for Pame browser media and compatible Windows apps, with title, source, playback state, progress and supported controls.
-- Right stick left/right selects a media source. Square on PlayStation, X on Xbox or Y on Switch plays/pauses that source.
-- Explicit Play in the Quick menu resumes a hidden browser source, including while Pame is minimized during a game.
-- Background recovery hides reopened app windows, including delayed secondary windows, while keeping their processes alive.
-- Settings → Pame on GitHub opens the project, release downloads and feedback inside Pame browser.
-- Includes the embedded browser with tabs/favorites, controller connection/battery overlays and hold-to-drag pointer control from 0.4.0.
+- **Now Playing in the Quick menu.** Control Pame browser media and compatible Windows apps, with title, source, playback state, progress and supported transport controls.
+- **Switch sources with the right stick.** Move left or right to choose a source. Square on PlayStation, X on Xbox or Y on Switch toggles playback.
+- **Keep your media playing.** Pressing Play in the Quick menu resumes a hidden browser source, including while Pame is minimized during a game.
+- **Return to a clean screen.** Background recovery keeps reopened app windows hidden, including delayed secondary windows, while their processes remain alive.
+- **The project is one click away.** Settings → Pame on GitHub opens the repository, releases and feedback inside Pame browser.
 
-116 automated tests pass. Native integration probes cover multiple browser tabs, an iframe, Windows media transport controls, actual background playback progression, source selection, window recovery and project-menu navigation. See [validation details](https://github.com/LielZ/Pame/blob/v0.4.1/docs/VALIDATION-0.4.1.md).
+This release also includes the embedded browser with tabs and favorites, controller connection and battery overlays, and hold-to-drag mouse control introduced in 0.4.0.
 
-**בעברית:** גרסת אלפא ציבורית של Pame — חוויית קונסולה למחשב Windows. ההתקנה זמינה בקישור למעלה. נוסף נגן ב־Quick menu עם מעבר בין מקורות בג'ויסטיק הימני; יישומים שהוחזרו לאחר משחק נשארים ברקע עם חלונות מוסתרים; וקישורי GitHub והורדות נפתחים בדפדפן המובנה.
+## A closer look
 
-[Report a problem or suggest a feature](https://github.com/LielZ/Pame/issues).
+![Pame game details with artwork, play controls and game information](https://raw.githubusercontent.com/LielZ/Pame/main/docs/images/game-details.png)
+
+<table>
+  <tr>
+    <td width="50%"><img src="https://raw.githubusercontent.com/LielZ/Pame/main/docs/images/stores.png" alt="Pame store launcher page" width="100%"></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/LielZ/Pame/main/docs/images/controllers.png" alt="Pame controller management page with four player slots" width="100%"></td>
+  </tr>
+  <tr>
+    <td><strong>Your stores, together.</strong></td>
+    <td><strong>Built around your controller.</strong></td>
+  </tr>
+</table>
+
+## Install or update
+
+1. Download **[Pame-Setup-0.4.1-x64.exe](https://github.com/LielZ/Pame/releases/download/v0.4.1/Pame-Setup-0.4.1-x64.exe)** and run it.
+2. Open Pame from the desktop or Start menu, then connect your controller.
+3. Hold **PS / Guide / Home** to open the Quick menu.
+
+Requires **Windows 10 version 2004 or newer, x64**. The installer includes .NET and installs WebView2 if needed. Existing users can install over their current version; library, settings and local browser data are preserved. Main setup runs for your Windows account. Optional Windows service access is off by default and requires an administrator confirmation during setup.
+
+This is an **unsigned alpha release**. See the [known limitations](https://github.com/LielZ/Pame/blob/v0.4.1/KNOWN_LIMITATIONS.md) for current compatibility and constraints.
+
+## Validation
+
+**116 automated tests passed.** Native integration probes covered multiple browser tabs, an iframe, Windows media transport controls, background playback progression, source selection, window recovery and project-menu navigation. Read the [validation details](https://github.com/LielZ/Pame/blob/v0.4.1/docs/VALIDATION-0.4.1.md).
+
+**[Explore Pame](https://github.com/LielZ/Pame#readme)** · **[Full changelog](https://github.com/LielZ/Pame/blob/v0.4.1/CHANGELOG.md)** · **[Report a problem](https://github.com/LielZ/Pame/issues)**
