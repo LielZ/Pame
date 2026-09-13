@@ -14,6 +14,8 @@
 
 Your PC games, stores, media and system controls in a fullscreen interface made for a controller. Pame puts your library in one place, makes the transition into a game feel like a console, and brings you home when you're done.
 
+**DualSense support goes beyond navigation:** configurable idle disconnect, battery percentages, custom light colors and on-controller **Player 1, 2, 3 and 4** indicators.
+
 ![Pame 0.4.1 home screen with a featured game, recently played games and store shortcuts](https://raw.githubusercontent.com/LielZ/Pame/main/docs/images/home.png)
 
 <p align="center"><sub>Captured directly from Pame 0.4.1. Games shown are not included.</sub></p>
@@ -28,6 +30,15 @@ Your PC games, stores, media and system controls in a fullscreen interface made 
 
 This release also includes the embedded browser with tabs and favorites, controller connection and battery overlays, and hold-to-drag mouse control introduced in 0.4.0.
 
+## DualSense and controller control
+
+- **Automatic idle disconnect, on your terms.** Choose a timeout or **Never** for supported Sony Bluetooth controllers. Pame's idle-disconnect timer is disabled during gameplay.
+- **Battery percentages and charging status.** See available readings in Home, Controllers and the Quick menu. Low-battery alerts start at **15%** by default; choose your threshold in Settings.
+- **Custom light colors.** Pick a DualSense light color and save a preference for each controller.
+- **Player 1 / 2 / 3 / 4 lights.** Assign Pame player slots and show the corresponding DualSense player-light pattern on each controller. Connection and disconnection notices name the player.
+
+Battery readings can be approximate, and available battery/lighting features depend on the connected controller. [Controller setup guide](https://github.com/LielZ/Pame/blob/main/docs/USER_GUIDE.md#dualsense-and-controller-management).
+
 ## A closer look
 
 ![Pame game details with artwork, play controls and game information](https://raw.githubusercontent.com/LielZ/Pame/main/docs/images/game-details.png)
@@ -39,7 +50,7 @@ This release also includes the embedded browser with tabs and favorites, control
   </tr>
   <tr>
     <td><strong>Your stores, together.</strong></td>
-    <td><strong>Built around your controller.</strong></td>
+    <td><strong>DualSense battery, colors and Player 1–4 lights.</strong></td>
   </tr>
 </table>
 

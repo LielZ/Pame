@@ -33,6 +33,20 @@ Mouse and physical keyboard are also supported. Search can be typed using the on
 
 **Browser** stays inside Pame's sidebar. Use the toolbar for tabs, back/forward, address/search, favorites and Mouse mode. In browser mouse mode, Square/X opens Pame's text keyboard, Triangle/Y opens address entry, LB/RB changes tabs, and holding PS/Guide returns to browser controls. The Quick menu opens the browser while a game is running; **Return to game** restores game focus. Hidden media pauses by default; change this in the browser options menu. Website sign-ins and subscriptions belong to the media provider.
 
+## DualSense and controller management
+
+Open **Controllers** to manage the four Pame player slots. Select a connected DualSense to change its player assignment or light color.
+
+| Feature | Where to find it | Behavior |
+| :--- | :--- | :--- |
+| **Automatic idle disconnect** | Controllers → Idle disconnect | Choose **Never**, **5**, **7**, **10**, **15** or **30 minutes**. The default is 7 minutes. Applies to supported Sony Bluetooth controllers while browsing Pame; Pame disables its timer during gameplay. |
+| **Battery percentage and charging** | Home, Controllers and Quick menu | Shows the controller's reported battery level and charging state. Sony readings are approximate and shown with a **~** in the detailed battery text. |
+| **Low-battery alerts** | Settings → Controller notifications | Warns at **15% or below** by default. Select another threshold or turn battery alerts off. Connection and disconnection notifications identify the player. |
+| **Light color** | Controllers → select controller → Light color | Choose a color and save it for that controller. Game profiles can temporarily apply a different controller color during play. |
+| **Player 1 / 2 / 3 / 4** | Controllers → select controller → Change player | Changes the Pame slot and sends its player index to the controller, enabling the corresponding DualSense player-light pattern. Saved assignments are reused when available. |
+
+Battery and lighting features depend on what the connected controller reports. Idle disconnect controls Pame's own Bluetooth-disconnect behavior; it does not repair unrelated Bluetooth signal loss, an empty battery or hardware power faults. Player slots identify controllers in Pame; individual games manage their own player assignments.
+
 ## Included
 
 The **Quick menu media player** stays visible while you scroll. Move the **right stick left/right** to choose a media source; **Square on PlayStation / X on Xbox / Y on Switch** toggles that source's playback. Use the D-pad to reach play/pause, previous/next and ±10 seconds where the source supports them. Browser tabs/frames and compatible Windows apps appear independently. Paused sources remain available to resume. Pressing Play in the Quick menu lets that browser source play in the background until paused, closed or navigated away.

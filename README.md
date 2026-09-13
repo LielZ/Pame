@@ -16,6 +16,8 @@
 
 Pame brings your installed PC games, stores, media and system controls into one fullscreen interface designed for a controller. Settle into the couch, pick a game and play. When you're done, Pame brings you back home.
 
+**More control over your DualSense:** manage automatic idle disconnect, see battery percentages, customize the light color and identify Players **1, 2, 3 and 4** using the controller's player lights.
+
 ![Pame home: featured game, recently played library, system status and store shortcuts](docs/images/home.png)
 
 <p align="center"><sub>Actual Pame 0.4.1 application capture. Game artwork comes from the installed library; games are not included.</sub></p>
@@ -29,6 +31,15 @@ Pame brings your installed PC games, stores, media and system controls into one 
 | **Media inside Pame.** The embedded browser has tabs and favorites. The Quick menu player switches between supported media sources with the right stick. | **Your choice of background activity.** Choose which supported apps and optional services Pame adjusts during play. It restores its changes afterwards and hides reopened app windows. |
 
 Pame works with your existing Windows installation and stores. Store sign-ins, purchases, downloads, DRM and anti-cheat remain with their providers.
+
+## Give your DualSense the console treatment
+
+- **Choose when an idle controller disconnects.** Set a timer or choose **Never** for supported Sony Bluetooth controllers. Pame disables its idle-disconnect timer during gameplay, so its own power-saving setting cannot interrupt a game.
+- **See the battery percentage.** Check battery and charging status from Home, Controllers or the Quick menu. Get a low-battery notification at **15%** by default, with the threshold adjustable in Settings.
+- **Pick your light color.** Change the DualSense light color from Pame and save a preference for each controller.
+- **Know who's Player 1, 2, 3 or 4.** Assign Pame player slots and display the corresponding DualSense player-light pattern on the controller itself. Connection and disconnection notices identify the player too.
+
+Battery readings can be approximate; battery and lighting controls follow the capabilities reported by the connected controller. See the [controller setup guide](docs/USER_GUIDE.md#dualsense-and-controller-management) for the available settings.
 
 ## Inside Pame
 
@@ -45,7 +56,7 @@ Artwork, playtime, favorites and game controls in a layout you can use from acro
   </tr>
   <tr>
     <td><strong>Your stores in one place</strong><br>See installed stores and open their launchers from Pame.</td>
-    <td><strong>Ready for your controllers</strong><br>Four player slots, connection notices and a configurable low-battery alert.</td>
+    <td><strong>Your DualSense, your settings</strong><br>Battery percentages, light colors, Player 1–4 indicators and configurable idle disconnect.</td>
   </tr>
 </table>
 
