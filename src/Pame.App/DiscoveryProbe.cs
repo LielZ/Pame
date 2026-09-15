@@ -18,7 +18,9 @@ public partial class MainWindow
             Navigate("Games");ShowLibraryTools();await Dispatcher.InvokeAsync(()=>{},DispatcherPriority.ApplicationIdle);
             report["scanHasControllerFocus"]=modalButtons.First().IsKeyboardFocused;
             SaveVisual(design,Path.Combine(dataRoot,"find-games.png"),1920,1080);HideModal();
-            var folder=Path.Combine(dataRoot,"fixtures","Desktop","YGO Power of Chaos");Directory.CreateDirectory(folder);await File.WriteAllTextAsync(Path.Combine(folder,"joey_pc.exe"),"Non-executable discovery fixture. Never launched.");
+            var folder=Path.Combine(dataRoot,"fixtures","Desktop","YGO Power of Chaos");Directory.CreateDirectory(folder);
+            var header=new byte[256];header[0]=0x4d;header[1]=0x5a;header[0x3c]=0x80;header[0x80]=0x50;header[0x81]=0x45;header[0x96]=2;header[0x98]=0x0b;header[0x99]=1;
+            await File.WriteAllBytesAsync(Path.Combine(folder,"joey_pc.exe"),header); // Header only, no runnable sections.
             foreach(var prior in games.Where(g=>g.Executable==Path.Combine(folder,"joey_pc.exe")))prior.Installed=false;
             await ScanPortable([Path.Combine(dataRoot,"fixtures","Desktop")]);await Dispatcher.InvokeAsync(()=>{},DispatcherPriority.ApplicationIdle);
             report["oldGameFound"]=modalButtons.Any(b=>System.Windows.Automation.AutomationProperties.GetName(b).Contains("Joey the Passion"));
@@ -43,6 +45,6 @@ public partial class MainWindow
             report["passed"]=report.Values.OfType<bool>().All(v=>v);
         }
         catch(Exception e){report["passed"]=false;report["error"]=e.ToString();}
-        finally{await File.WriteAllTextAsync(Path.Combine(dataRoot,"discovery-report.json"),JsonSerializer.Serialize(report,new JsonSerializerOptions{WriteIndented=true}));Close();}
+        finally{File.Delete(Path.Combine(dataRoot,"fixtures","Desktop","YGO Power of Chaos","joey_pc.exe"));await File.WriteAllTextAsync(Path.Combine(dataRoot,"discovery-report.json"),JsonSerializer.Serialize(report,new JsonSerializerOptions{WriteIndented=true}));Close();}
     }
 }

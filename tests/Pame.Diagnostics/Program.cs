@@ -16,7 +16,8 @@ if(args.FirstOrDefault()=="--discover")
     var known=await new DiscoveryService().ScanAsync();
     await File.WriteAllTextAsync(Path.Combine(output,"stores.json"),JsonSerializer.Serialize(known));
     using var art=new MetadataService(output);if(args.Length>3)await art.Catalog.ImportArchiveAsync(args[3]);else await art.Catalog.EnsureAsync(true);
-    var portable=await new PortableDiscovery().ScanAsync(args.Length>2?[Path.GetFullPath(args[2])]:DriveInfo.GetDrives().Where(d=>d.IsReady&&d.DriveType==DriveType.Fixed).Select(d=>d.Name),known.Games,catalog:art.Catalog);
+    var roots=args.Length>2?(args[2]=="--default"?PortableDiscovery.DefaultRoots():[Path.GetFullPath(args[2])]):DriveInfo.GetDrives().Where(d=>d.IsReady&&d.DriveType==DriveType.Fixed).Select(d=>d.Name);
+    var portable=await new PortableDiscovery().ScanAsync(roots,known.Games,catalog:art.Catalog);
     await File.WriteAllTextAsync(Path.Combine(output,"discovery.json"),JsonSerializer.Serialize(portable,new JsonSerializerOptions{WriteIndented=true}));
     var game=new Game{Id="probe:portable",Title=args.Length>4?args[4]:"ELDEN RING",Store=StoreKind.Standalone};await art.EnrichAsync(game);
     await File.WriteAllTextAsync(Path.Combine(output,"artwork.json"),JsonSerializer.Serialize(new{game.Title,game.MetadataAppId,cover=File.Exists(game.CoverImage),hero=File.Exists(game.HeroImage),logo=File.Exists(game.LogoImage),art.LastNotice},new JsonSerializerOptions{WriteIndented=true}));

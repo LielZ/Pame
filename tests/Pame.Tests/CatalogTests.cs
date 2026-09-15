@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using Pame.Windows;
 using Xunit;
 
@@ -17,21 +17,39 @@ public sealed class CatalogTests : IDisposable
     [Fact] public async Task FindsOldGameOnDesktopByFamilyFolderAndAbbreviatedExecutable()
     {
         using var catalog=new LaunchBoxCatalog(root);await catalog.ImportArchiveAsync(Zip("<LaunchBox>"+Games+"</LaunchBox>"));
-        var folder=Path.Combine(root,"Desktop","YGO Power of Chaos");Directory.CreateDirectory(folder);var exe=Path.Combine(folder,"joey_pc.exe");File.WriteAllText(exe,"fixture");
+        var folder=Path.Combine(root,"Desktop","YGO Power of Chaos");Directory.CreateDirectory(folder);var exe=Path.Combine(folder,"joey_pc.exe");ExecutableFixture.Write(exe);
         var game=Assert.Single((await new PortableDiscovery().ScanAsync([Path.Combine(root,"Desktop")],[],catalog:catalog)).Candidates).Game;
         Assert.Equal("2",game.CatalogId);Assert.Equal("Yu-Gi-Oh! Power of Chaos: Joey the Passion",game.Title);Assert.Equal(exe,game.Executable);
     }
     [Fact] public async Task AmbiguousFamilyIsFoundButEditionIsNotInvented()
     {
-        using var catalog=new LaunchBoxCatalog(root);await catalog.ImportArchiveAsync(Zip("<LaunchBox>"+Games+"</LaunchBox>"));var folder=Path.Combine(root,"YGO Power of Chaos");Directory.CreateDirectory(folder);var exe=Path.Combine(folder,"game.exe");File.WriteAllText(exe,"fixture");
+        using var catalog=new LaunchBoxCatalog(root);await catalog.ImportArchiveAsync(Zip("<LaunchBox>"+Games+"</LaunchBox>"));var folder=Path.Combine(root,"YGO Power of Chaos");Directory.CreateDirectory(folder);var exe=Path.Combine(folder,"game.exe");ExecutableFixture.Write(exe);
         var candidate=PortableDiscovery.Inspect(exe,catalog:catalog);Assert.NotNull(candidate);Assert.Equal("",candidate.Game.CatalogId);Assert.Contains("choose edition",candidate.Evidence);
     }
     [Fact] public async Task CatalogWorksOfflineAfterRestart()
     {using(var catalog=new LaunchBoxCatalog(root))await catalog.ImportArchiveAsync(Zip("<LaunchBox>"+Games+"</LaunchBox>"));using var cached=new LaunchBoxCatalog(root);Assert.True(await cached.EnsureAsync(false));Assert.Equal(2,cached.Search("YGO Power of Chaos").Count);}
+    [Theory][InlineData("Application","chrome.exe","Chrome")][InlineData("bin","touch.exe","Touch")][InlineData("paladin","Paladin_32bits_old.exe","Paladin")]
+    public async Task CommonAppFilenamesOrShortFolderNamesDoNotProveAGame(string directory,string file,string title)
+    {
+        using var catalog=new LaunchBoxCatalog(root);await catalog.ImportArchiveAsync(Zip($"<LaunchBox><Game><DatabaseID>7</DatabaseID><Name>{title}</Name><Platform>Windows</Platform></Game></LaunchBox>"));
+        var exe=Path.Combine(root,directory,file);ExecutableFixture.Write(exe);Assert.Null(PortableDiscovery.Inspect(exe,catalog:catalog));
+    }
+    [Fact] public async Task CorroboratedSingleWordGameIsStillFound()
+    {
+        using var catalog=new LaunchBoxCatalog(root);await catalog.ImportArchiveAsync(Zip("<LaunchBox><Game><DatabaseID>7</DatabaseID><Name>Control</Name><Platform>Windows</Platform></Game></LaunchBox>"));
+        var exe=Path.Combine(root,"Control","Control.exe");ExecutableFixture.Write(exe);Assert.Equal("7",PortableDiscovery.Inspect(exe,catalog:catalog)!.Game.CatalogId);
+    }
+    [Fact] public async Task OldRejectedCandidatesAreHiddenWithoutErasingUserHistory()
+    {
+        using var catalog=new LaunchBoxCatalog(root);await catalog.ImportArchiveAsync(Zip("<LaunchBox>"+Games+"</LaunchBox>"));
+        var exe=Path.Combine(root,"Windows","System32","control.exe");ExecutableFixture.Write(exe);
+        var game=new Pame.Core.Game{Id="probe:rejected",Title="Control",Store=Pame.Core.StoreKind.Standalone,Executable=exe,DiscoverySource="Windows game catalog match"};
+        Assert.True(PortableDiscovery.ShouldHideRejectedCandidate(game,catalog));game.LocalPlaySeconds=42;Assert.False(PortableDiscovery.ShouldHideRejectedCandidate(game,catalog));game.LocalPlaySeconds=0;game.Favorite=true;Assert.False(PortableDiscovery.ShouldHideRejectedCandidate(game,catalog));game.Favorite=false;game.DiscoverySource="";Assert.False(PortableDiscovery.ShouldHideRejectedCandidate(game,catalog));
+    }
     [Fact] public async Task TwoClassicExecutablesInOneFolderRemainSeparateGames()
     {
         using var catalog=new LaunchBoxCatalog(root);await catalog.ImportArchiveAsync(Zip("<LaunchBox>"+Games+"</LaunchBox>"));var folder=Path.Combine(root,"Desktop","YGO Power of Chaos");Directory.CreateDirectory(folder);
-        File.WriteAllText(Path.Combine(folder,"joey_pc.exe"),"fixture");File.WriteAllText(Path.Combine(folder,"yugi_pc.exe"),"fixture");
+        ExecutableFixture.Write(Path.Combine(folder,"joey_pc.exe"));ExecutableFixture.Write(Path.Combine(folder,"yugi_pc.exe"));
         var found=await new PortableDiscovery().ScanAsync([Path.Combine(root,"Desktop")],[],catalog:catalog);Assert.Equal(2,found.Candidates.Count);Assert.Equal(2,Pame.Core.GameLibrary.Normalize(found.Candidates.Select(c=>c.Game)).Count());
     }
     [Fact] public void UntrustedXmlCannotReadLocalFilesOrResolveEntities()

@@ -1,12 +1,20 @@
-# Pame 0.4.2
+# Pame 0.4.4 - More precise standalone discovery
 
-## 0.4.3 - Games beyond stores
+- Apply system and helper directory exclusions to all ancestors, including registry-supplied scan roots.
+- Require executable PE headers; ignore renamed text files and DLLs.
+- Require corroboration for short catalog titles so browser and command-line tool names do not become game entries.
+- Hide rejected unused automatic entries without deleting files or play history; preserve manually added, favorited, renamed and played games.
+- Keep classic Power of Chaos edition matching and keyless cover, background and logo downloads.
+
+# Pame 0.4.3 - Games beyond stores
 
 - Find standalone and extracted portable Windows games using engine data, executable details and a local game catalog.
 - Scan the PC or selected folders, review results, preserve hidden games, and watch Desktop/Downloads for changes.
 - Use the free LaunchBox Games Database without accounts or API keys, with Steam and local images as additional sources.
 - Show game logos, correct artwork matches and rename games entirely with a controller.
 - Preserve histories and preferences when rescanning and upgrading.
+
+# Pame 0.4.2
 
 - Add Settings → Updates with automatic GitHub release checks, verified background downloads, installation at the next Pame startup and a controller-operated Restart & update action.
 - Offer automatic/manual updates and public-alpha/stable release choices. Defer updates during Pame game sessions; cancel active downloads when launching a game.

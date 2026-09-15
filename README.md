@@ -3,16 +3,16 @@
 </p>
 
 <p align="center">
-  <strong><a href="https://github.com/LielZ/Pame/releases/download/v0.4.3/Pame-Setup-0.4.3-x64.exe">Download for Windows</a></strong>
+  <strong><a href="https://github.com/LielZ/Pame/releases/download/v0.4.4/Pame-Setup-0.4.4-x64.exe">Download for Windows</a></strong>
   &nbsp; · &nbsp;
-  <a href="https://github.com/LielZ/Pame/releases/tag/v0.4.3">Release notes</a>
+  <a href="https://github.com/LielZ/Pame/releases/tag/v0.4.4">Release notes</a>
   &nbsp; · &nbsp;
   <a href="docs/USER_GUIDE.md">User guide</a>
   &nbsp; · &nbsp;
   <a href="https://github.com/LielZ/Pame/issues">Feedback</a>
 </p>
 
-<p align="center"><sub>PUBLIC ALPHA 0.4.3 &nbsp; / &nbsp; WINDOWS 10 2004+ &nbsp; / &nbsp; x64</sub></p>
+<p align="center"><sub>PUBLIC ALPHA 0.4.4 &nbsp; / &nbsp; WINDOWS 10 2004+ &nbsp; / &nbsp; x64</sub></p>
 
 Pame brings your installed PC games, stores, media and system controls into one fullscreen interface designed for a controller. Settle into the couch, pick a game and play. When you're done, Pame brings you back home.
 
@@ -74,7 +74,7 @@ Extracted Windows games are supported. Archives and installers need to be set up
 
 **Pame keeps itself up to date.** From version 0.4.2, updates download automatically from GitHub and install next time Pame opens. Use **Settings → Updates → Restart & update** to apply a ready update now, or choose manual updates. Downloads wait during games launched through Pame. [How updates work](docs/UPDATER.md).
 
-1. **[Download the Windows installer](https://github.com/LielZ/Pame/releases/download/v0.4.3/Pame-Setup-0.4.3-x64.exe)** and run it. The .NET runtime is included; setup installs Microsoft WebView2 if needed.
+1. **[Download the Windows installer](https://github.com/LielZ/Pame/releases/download/v0.4.4/Pame-Setup-0.4.4-x64.exe)** and run it. The .NET runtime is included; setup installs Microsoft WebView2 if needed.
 2. **Open Pame and connect a controller.** Your supported installed libraries are discovered automatically. Sign into your stores if prompted.
 3. **Choose a game.** Hold PS / Guide / Home for the Quick menu. Explore **Settings** to customize appearance, sound and background activity.
 
@@ -87,11 +87,11 @@ Requires Windows 10 version 2004 or later, x64. This is an unsigned alpha; see [
 | **[User guide](docs/USER_GUIDE.md)** | Setup, controller shortcuts, browser controls, recovery and local data. |
 | **[What's new](CHANGELOG.md)** | Changes across Pame releases. |
 | **[Build from source](docs/USER_GUIDE.md#develop)** | .NET 10 / WPF development and Windows packaging. |
-| **[Validation](docs/VALIDATION-0.4.3.md)** | Automated checks and native integration results for 0.4.3. |
+| **[Validation](docs/VALIDATION-0.4.4.md)** | Automated checks and native integration results for 0.4.4. |
 | **[Known limitations](KNOWN_LIMITATIONS.md)** | Current compatibility and alpha constraints. |
 | **[Report an issue](https://github.com/LielZ/Pame/issues)** | Bugs, controller compatibility and feature requests. |
 
 <p align="center">
   <sub>Pame is an independent project. Game, store and controller brands belong to their owners.<br>
-  <a href="THIRD_PARTY_NOTICES.md">Third-party notices</a> · <a href="DEPENDENCIES.md">Dependencies</a> · <a href="https://github.com/LielZ/Pame/releases/download/v0.4.3/SHA256SUMS.txt">Installer checksum</a></sub>
+  <a href="THIRD_PARTY_NOTICES.md">Third-party notices</a> · <a href="DEPENDENCIES.md">Dependencies</a> · <a href="https://github.com/LielZ/Pame/releases/download/v0.4.4/SHA256SUMS.txt">Installer checksum</a></sub>
 </p>

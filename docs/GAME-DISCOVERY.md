@@ -30,9 +30,9 @@ The September 15, 2026 check downloaded a 107,689,581-byte archive and built an 
 
 ## Detection and safeguards
 
-Detection reads executable version resources and checks for game content: Unity, Unreal packaged games, Godot sidecar packages, Ren'Py, GameMaker, RPG Maker, and game-runtime/content combinations. Catalog matching also recognizes older games that do not use these engines. It never executes a discovered file during scanning or artwork lookup.
+Detection checks Windows executable headers, reads version resources and checks for game content: Unity, Unreal packaged games, Godot sidecar packages, Ren'Py, GameMaker, RPG Maker, and game-runtime/content combinations. Catalog matching also recognizes older games that do not use these engines. Short catalog names need corroboration from multiple title fields; a filename alone such as chrome.exe or touch.exe does not prove a game. It never executes a discovered file during scanning or artwork lookup.
 
-Store game folders are excluded from standalone scanning. Helper applications, crash reporters, installers, Windows folders, developer dependency directories, store download staging folders and directory junctions are skipped. Full scans stop after two minutes or 100,000 visited folders; automatic scans use a 30,000-folder cap. Each directory is limited to 4,096 entries and traversal to 24 levels. Results indicate limits and skipped locations; selecting a narrower folder continues the search.
+Store game folders are excluded from standalone scanning. Helper applications, crash reporters, installers, Windows folders, developer dependency directories, store download staging folders and directory junctions are skipped. Exclusions apply to ancestors too, including roots supplied by registry installation records. Full scans stop after two minutes or 100,000 visited folders; automatic scans use a 30,000-folder cap. Each directory is limited to 4,096 entries and traversal to 24 levels. Results indicate limits and skipped locations; selecting a narrower folder continues the search.
 
 Automatic artwork matching accepts one exact normalized title or a known catalog ID. User-selected matches are preserved. No game is automatically launched. Files, saves, favorites and playtime remain independent of artwork matches. Multiple standalone executables in the same folder can remain separate entries.
 

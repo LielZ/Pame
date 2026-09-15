@@ -16,7 +16,30 @@ public sealed class PortableDiscovery
 {
     static readonly HashSet<string> Skip = new(StringComparer.OrdinalIgnoreCase)
     { "Windows", "WindowsApps", "WinSxS", "$Recycle.Bin", "System Volume Information", "Recovery", "ProgramData", "AppData", ".git", ".codex", ".tools", "node_modules", "packages", "__pycache__", ".venv", "venv", "redist", "_CommonRedist", "DirectX", "EasyAntiCheat", "BattlEye", "Engine", "SteamVR", "EA Desktop", "EpicGamesLauncher", "Microsoft Edge", "Google Chrome", "downloading", "shadercache", "depotcache" };
-    static readonly Regex Tools = new(@"(?:^|[._ -])(setup|install|unins\w*|crash\w*|report\w*|update\w*|editor|server|benchmark|vcredist\w*|dxsetup|unitycrashhandler\w*|notification\w*|helper|cef\w*|eac\w*)(?:$|[._ -])", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    static readonly Regex Tools = new(@"(?:^|[._ -])(setup|install|cleanup|unins\w*|crash\w*|report\w*|update\w*|editor|server|benchmark|vcredist\w*|dxsetup|unitycrashhandler\w*|notification\w*|helper|cef\w*|eac\w*)(?:$|[._ -])", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    public static bool IsExcludedPath(string path)
+    {
+        // Registry InstallLocation values can point inside Windows or a helper directory.
+        // Check all ancestors, including when such a directory is supplied as a scan root.
+        var parts=Path.GetFullPath(path).Split(Path.DirectorySeparatorChar,Path.AltDirectorySeparatorChar);
+        return parts.Any(p=>(!p.Equals("AppData",StringComparison.OrdinalIgnoreCase) && Skip.Contains(p)) || p.Equals("Common Files",StringComparison.OrdinalIgnoreCase) || p.Equals("Git",StringComparison.OrdinalIgnoreCase) || p.Equals("Engines",StringComparison.OrdinalIgnoreCase));
+    }
+    public static bool HasExecutableHeader(string path)
+    {
+        try
+        {
+            using var stream=File.Open(path,FileMode.Open,FileAccess.Read,FileShare.ReadWrite|FileShare.Delete);
+            using var reader=new BinaryReader(stream);
+            if(stream.Length<88 || reader.ReadUInt16()!=0x5a4d)return false;
+            stream.Position=0x3c;var offset=reader.ReadInt32();if(offset<64 || offset>stream.Length-26)return false;
+            stream.Position=offset;if(reader.ReadUInt32()!=0x00004550)return false;
+            stream.Position=offset+22;var flags=reader.ReadUInt16();var magic=reader.ReadUInt16();
+            return (flags&0x2002)==0x0002 && magic is 0x10b or 0x20b;
+        }
+        catch(Exception e) when(e is IOException or UnauthorizedAccessException or System.Security.SecurityException){return false;}
+    }
+    public static bool ShouldHideRejectedCandidate(Game game,LaunchBoxCatalog catalog) =>
+        catalog.Count>0 && game.Store==StoreKind.Standalone && game.DiscoverySource.Length>0 && !game.Favorite && !game.CustomTitle && game.ArtworkProvider.Length==0 && game.LocalPlaySeconds==0 && game.ImportedPlaySeconds==0 && File.Exists(game.Executable) && Inspect(game.Executable,catalog:catalog)==null;
     public static string IdFor(string exe) => "manual:" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(exe).ToUpperInvariant())))[..20];
     public static IEnumerable<string> DefaultRoots()
     {
@@ -43,7 +66,7 @@ public sealed class PortableDiscovery
             if(!seen.Add(next.Path) || excludes.Any(p=>next.Path.TrimEnd('\\').Equals(p.TrimEnd('\\'),StringComparison.OrdinalIgnoreCase)||SafetyPolicy.IsWithin(next.Path,p)))continue;
             try
             {
-                if((File.GetAttributes(next.Path)&FileAttributes.ReparsePoint)!=0 || Skip.Contains(Path.GetFileName(next.Path)))continue;
+                if((File.GetAttributes(next.Path)&FileAttributes.ReparsePoint)!=0 || Skip.Contains(Path.GetFileName(next.Path)) || IsExcludedPath(next.Path))continue;
                 // Bound work in enormous folders as well as the overall traversal.
                 var entries=Directory.EnumerateFileSystemEntries(next.Path).Take(4097).ToArray();
                 if(entries.Length>4096){skipped++;limited=true;}
@@ -66,7 +89,7 @@ public sealed class PortableDiscovery
     static int Rank(string exe)=>(exe.Contains("Win64",StringComparison.OrdinalIgnoreCase)?4:0)+(exe.Contains("Shipping",StringComparison.OrdinalIgnoreCase)?2:0);
     public static PortableCandidate? Inspect(string exe,string[]? files=null,LaunchBoxCatalog? catalog=null)
     {
-        if(!File.Exists(exe)||!exe.EndsWith(".exe",StringComparison.OrdinalIgnoreCase)||Tools.IsMatch(Path.GetFileNameWithoutExtension(exe)))return null;
+        if(!File.Exists(exe)||!exe.EndsWith(".exe",StringComparison.OrdinalIgnoreCase)||IsExcludedPath(exe)||Tools.IsMatch(Path.GetFileNameWithoutExtension(exe))||!HasExecutableHeader(exe))return null;
         var folder=Path.GetDirectoryName(exe)!;files??=Directory.GetFiles(folder);var stem=Path.GetFileNameWithoutExtension(exe);
         if(new[]{"installer","backgroundservice","webhelper","anticheat","crashhandler","bootstrap","updater","eadesktop"}.Any(s=>stem.Contains(s,StringComparison.OrdinalIgnoreCase))||!SafetyPolicy.IsSafeGameProcess(exe,folder))return null;
         bool Has(string name)=>files.Any(p=>Path.GetFileName(p).Equals(name,StringComparison.OrdinalIgnoreCase));

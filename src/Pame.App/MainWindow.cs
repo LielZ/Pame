@@ -140,7 +140,12 @@ public partial class MainWindow : Window
             foreach(var game in result.Games){var old=previous.FirstOrDefault(x=>x.Id==game.Id);if(old!=null)GameLibrary.MergeUserData(game,old);}
             // Keep manually added games and historical entries for temporarily disconnected drives.
             var ids=result.Games.Select(g=>g.Id).ToHashSet();
-            foreach(var old in previous.Where(g=>!ids.Contains(g.Id))){old.Installed=old.Store==StoreKind.Standalone&&File.Exists(old.Executable);result.Games.Add(old);}
+            foreach(var old in previous.Where(g=>!ids.Contains(g.Id)))
+            {
+                old.Installed=old.Store==StoreKind.Standalone&&File.Exists(old.Executable);
+                if(settings.ScanPortableGames&&!smoke&&PortableDiscovery.ShouldHideRejectedCandidate(old,metadata.Catalog)){old.Installed=false;old.LibraryHidden=true;}
+                result.Games.Add(old);
+            }
             games=GameLibrary.Normalize(result.Games).ToList();
             var imported=await Task.Run(DiscoveryService.SteamPlaytime);
             foreach(var game in games)if(imported.TryGetValue(game.Id,out var seconds)&&game.ImportedPlaySeconds==0&&game.LocalPlaySeconds==0)game.ImportedPlaySeconds=seconds;

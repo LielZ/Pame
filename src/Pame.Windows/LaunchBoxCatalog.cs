@@ -88,7 +88,15 @@ public sealed class LaunchBoxCatalog : IDisposable
     {
         var folder=Path.GetDirectoryName(exe)!;var stem=Path.GetFileNameWithoutExtension(exe);var titles=new List<string>{stem,Path.GetFileName(folder)};
         try{var info=System.Diagnostics.FileVersionInfo.GetVersionInfo(exe);if(info.ProductName is {Length:>2} product)titles.Insert(0,product);if(info.FileDescription is {Length:>2} description)titles.Insert(0,description);}catch(Exception e) when(e is IOException or System.ComponentModel.Win32Exception){}
-        foreach(var title in titles){var match=Exact(title);if(match!=null && Normalize(title).Length>=5)return match;}
+        foreach(var title in titles)
+        {
+            var match=Exact(title);if(match==null || Normalize(title).Length<5)continue;
+            // A lone common filename (chrome.exe, touch.exe, control.exe) is not
+            // evidence of a game. Require a descriptive title or corroboration.
+            var descriptive=Normalize(title).Length>=10 && Regex.Matches(title,@"[\p{L}\p{N}]+").Count>=2;
+            var corroborated=titles.Count(t=>Exact(t)?.Id==match.Id)>=2;
+            if(descriptive || corroborated)return match;
+        }
         // Old games often use abbreviated launch filenames. Require a recognizable family folder,
         // and a unique catalog title containing the filename words; never guess between editions.
         var family=Normalize(Path.GetFileName(folder));

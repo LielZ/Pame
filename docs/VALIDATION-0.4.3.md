@@ -5,6 +5,7 @@
 - A controlled Desktop folder fixture named YGO Power of Chaos with joey_pc.exe is recognized through the real catalog. Tests also cover ambiguous generic filenames without assigning an invented edition.
 - Read-only scans of this PC found the existing YGO Omega installation. Store duplicates, Steam download staging files and EA/SteamVR helpers were excluded after targeted checks.
 - Native WPF UI probe verifies controller focus on Find games, recognition/import of the old-game fixture, cached cover/background art, a reachable Back action, no API-key controls and a rendered transparent logo. 1080p captures were visually reviewed. The fixture contains no runnable game; this is discovery/UI validation, not a playthrough.
-- Full per-user installer and installed-version upgrade verification use the existing GitHub updater. See the 0.4.2 validation for its first installed upgrade; final 0.4.3 application checks are recorded after publishing.
+- Installed 0.4.2 downloaded the public GitHub package, applied it automatically on next startup and relaunched as 0.4.3. Existing shell preferences, favorites and playtime were unchanged; autostart remained enabled and SQLite integrity passed.
+- The full installed default-root scan exposed false positives from Windows tools, Chrome, EA cleanup programs and chess-engine helpers. The targeted earlier scan did not cover these registry-supplied roots. This finding is corrected and covered by regression tests in 0.4.4; use that release for standalone discovery.
 
 Known limits, source requirements and scan bounds are documented in [GAME-DISCOVERY.md](GAME-DISCOVERY.md). Physical-controller endurance and arbitrary legacy-game compatibility are not claimed by these tests.

@@ -10,7 +10,7 @@ namespace Pame.Tests;
 public sealed class DiscoveryArtworkTests : IDisposable
 {
     readonly string root=Path.Combine(Path.GetTempPath(),"Pame-discovery-tests-"+Guid.NewGuid().ToString("N"));
-    string Put(string relative,string contents="fixture") {var p=Path.GetFullPath(Path.Combine(root,relative));Directory.CreateDirectory(Path.GetDirectoryName(p)!);File.WriteAllText(p,contents);return p;}
+    string Put(string relative,string contents="fixture") {var p=Path.GetFullPath(Path.Combine(root,relative));Directory.CreateDirectory(Path.GetDirectoryName(p)!);if(p.EndsWith(".exe",StringComparison.OrdinalIgnoreCase))ExecutableFixture.Write(p);else File.WriteAllText(p,contents);return p;}
     public DiscoveryArtworkTests(){Put("catalog/launchbox-windows-v1.json",JsonSerializer.Serialize(new[]{new CatalogGame("99999","Catalog Sentinel","","","")}));}
     string Unity(string name="Moon Quest") {var exe=Put(name+"/Moon.exe");Put(name+"/UnityPlayer.dll");Put(name+"/Moon_Data/globalgamemanagers");return exe;}
     [Fact] public async Task FindsExtractedUnityAndKeepsLocalArtwork()
@@ -38,6 +38,13 @@ public sealed class DiscoveryArtworkTests : IDisposable
     {Unity("Windows/Hidden Game");Unity("node_modules/Example Game");Unity("steamapps/downloading/Partial Game");Unity("EA Desktop/Helper");Assert.Empty((await new PortableDiscovery().ScanAsync([root],[])).Candidates);}
     [Fact] public async Task CancellationStopsScanAndLimitsAreReported()
     {Unity();using var c=new CancellationTokenSource();c.Cancel();await Assert.ThrowsAnyAsync<OperationCanceledException>(()=>new PortableDiscovery().ScanAsync([root],[],ct:c.Token));Assert.True((await new PortableDiscovery().ScanAsync([root],[],maxFolders:1)).Limited);}
+    [Theory][InlineData("Windows/System32")][InlineData("Common Files/EAInstaller/Game")][InlineData("Git/usr/bin")][InlineData("Chess/Engines/paladin")]
+    public async Task ExcludedAncestorsCannotBeBypassedByAnExplicitRoot(string relative)
+    {var exe=Unity(relative);Assert.Empty((await new PortableDiscovery().ScanAsync([Path.GetDirectoryName(exe)!],[])).Candidates);Assert.Null(PortableDiscovery.Inspect(exe));}
+    [Fact] public void TextDisguisedAsExecutableIsRejected()
+    {var exe=Unity();File.WriteAllText(exe,"Not a Windows executable");Assert.Null(PortableDiscovery.Inspect(exe));}
+    [Fact] public void DllDisguisedAsExecutableIsRejected()
+    {var exe=Unity();var data=File.ReadAllBytes(exe);data[0x97]=0x20;File.WriteAllBytes(exe,data);Assert.Null(PortableDiscovery.Inspect(exe));}
     [Fact] public void RemovedPortableGamesStayHiddenAcrossRescansAndHistoryIsPreserved()
     {
         var exe=Unity();var old=PortableDiscovery.Inspect(exe)!.Game;old.LibraryHidden=true;old.CustomTitle=true;old.Title="My favorite game";old.LocalPlaySeconds=987;old.Favorite=true;old.CatalogId="123";old.LogoImage="cached-logo";
