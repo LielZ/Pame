@@ -68,7 +68,7 @@ public partial class MainWindow
     {
         var b=Button(game.Title,"game:"+game.Id,()=>OpenDetails(game));b.Padding=new(0);b.Width=width;b.Height=height;b.Margin=new(0,0,15,0);b.Background=Brush("#152A3B");
         var grid=new Grid{ClipToBounds=true,Width=width-6,Height=height-6,Clip=new RectangleGeometry(new Rect(0,0,width-6,height-6),10,10)};
-        var cover=LoadImage(game.CoverImage,440)??LoadImage(game.HeroImage,600);
+        var cover=LoadImage(game.CardImage,440)??LoadImage(game.HeroImage,600);
         if(cover!=null)grid.Children.Add(new Image{Source=cover,Stretch=Stretch.UniformToFill});
         else
         {
@@ -122,7 +122,7 @@ public partial class MainWindow
         var play=Button("▶   Play now","details:play",()=>StartGame(game));play.Width=260;play.Height=66;play.Background=Brush("#E7F1FF");play.Foreground=Brush("#111E2D");Place(page,play,260,455);
         var stop=Button("Stop","details:stop",ShowCloseGame);stop.Width=140;stop.Height=66;stop.Visibility=Visibility.Collapsed;Place(page,stop,540,455);
         var favorite=Button(game.Favorite?"★   Favorited":"☆   Favorite","details:favorite",()=>ToggleFavorite(game));favorite.Height=66;Place(page,favorite,540,455);
-        var cover=LoadImage(game.CoverImage,550);if(cover!=null)Place(page,new Border{Child=new Image{Source=cover,Stretch=Stretch.UniformToFill},Width=225,Height=336,CornerRadius=new(16),ClipToBounds=true},1288,161);
+        var cover=LoadImage(game.CardImage,550);if(cover!=null)Place(page,new Border{Child=new Image{Source=cover,Stretch=Stretch.UniformToFill},Width=225,Height=336,CornerRadius=new(16),ClipToBounds=true},1288,161);
         var facts=new StackPanel{Orientation=Orientation.Horizontal};
         foreach(var (label,value) in new[]{("PLAYTIME",game.PlaytimeText),("LAST PLAYED",LastPlayed(game)),("STORAGE",game.SizeText),("CONTROLLER",game.ControllerSupport==true?"Supported":game.ControllerSupport==false?"Not supported":"Not specified")})
         {var stack=new StackPanel{Width=275};stack.Children.Add(Text(label,12,Color.FromRgb(132,169,196),FontWeights.Bold));var val=Text(value,21,Colors.White,FontWeights.SemiBold);val.Margin=new(0,11,0,0);stack.Children.Add(val);facts.Children.Add(stack);}

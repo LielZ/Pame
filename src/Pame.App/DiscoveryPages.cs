@@ -94,9 +94,9 @@ public partial class MainWindow
             ("Automatic artwork: "+(settings.FetchMetadata?"On":"Off"),()=>{settings.FetchMetadata=!settings.FetchMetadata;SaveSettings();ShowArtworkSettings();}),
             ("Refresh the free game catalog",()=>_=RefreshCatalog()),
             ("Browse LaunchBox Games Database",()=>OpenBrowser("https://gamesdb.launchbox-app.com/")),
-            ("Refresh missing artwork",()=>{foreach(var g in games)g.ArtworkChecked=null;db.SaveGames(games);HideModal();if(settings.FetchMetadata)_=RefreshLibrary();else Toast("Enable automatic artwork or refresh a game from Manage game.");}),
+            ("Refresh missing artwork",()=>{foreach(var g in games){g.ArtworkChecked=null;g.BoxFrontChecked=null;}db.SaveGames(games);HideModal();if(settings.FetchMetadata)_=RefreshLibrary();else Toast("Enable automatic artwork or refresh a game from Manage game.");}),
             ("Back",HideModal)
-        },"LaunchBox covers classic and modern Windows games, with Steam as an additional image source. No accounts, API keys or subscriptions. The first catalog download is about 103 MB; matching and cached images then work offline.\n"+metadata.Catalog.Status);
+        },"Steam games keep their Steam covers. Other games prefer LaunchBox front covers, with existing store images as fallback. Backgrounds and logos stay separate. No accounts, API keys or subscriptions. The first catalog download is about 103 MB; matching and cached images then work offline.\n"+metadata.Catalog.Status);
     }
     async Task RefreshCatalog()
     {
@@ -127,7 +127,7 @@ public partial class MainWindow
             ShowChoices("Choose the correct game",results.Select(m=>($"{m.Title} · {m.Provider} #{m.Id}",(Action)(()=>Confirm("Use artwork for "+m.Title+"?","This changes images in Pame. Your game, saves and playtime stay the same.","Use artwork",()=>{
                 if(m.Provider=="Steam"){game.MetadataAppId=m.Id;game.CatalogId="";}else{game.CatalogId=m.Id;game.MetadataAppId="";}
                 game.ArtworkProvider=m.Provider;
-                game.CoverImage="";game.HeroImage="";game.LogoImage="";game.ArtworkCredits="";game.MetadataUpdated=null;game.ArtworkChecked=null;_=RefreshGameArtwork(game);
+                game.CoverImage="";game.BoxFrontImage="";game.BoxFrontChecked=null;game.HeroImage="";game.LogoImage="";game.ArtworkCredits="";game.MetadataUpdated=null;game.ArtworkChecked=null;_=RefreshGameArtwork(game);
             })))).Append(("Search again",(Action)(()=>SearchArtworkTitle(game,provider)))).Append(("Back",(Action)(()=>ShowGameArtwork(game)))),results.Count==0?(metadata.LastNotice.Length>0?metadata.LastNotice:"No match found. Try the game's official title, or try the other source."):"Check the title and edition before choosing artwork. Automatic matching only accepts a single exact title.");
         }
         catch(OperationCanceledException){}catch(Exception e) when(e is HttpRequestException or System.Text.Json.JsonException){Toast("The artwork search is unavailable. Try again later.");}

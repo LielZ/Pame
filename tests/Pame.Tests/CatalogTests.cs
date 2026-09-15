@@ -54,8 +54,20 @@ public sealed class CatalogTests : IDisposable
     }
     [Fact] public void UntrustedXmlCannotReadLocalFilesOrResolveEntities()
     {Assert.Throws<System.Xml.XmlException>(()=>LaunchBoxCatalog.ReadArchive(Zip("<!DOCTYPE LaunchBox [<!ENTITY file SYSTEM 'file:///C:/Windows/win.ini'>]><LaunchBox><Game>&file;</Game></LaunchBox>")));}
-    [Theory][InlineData("../../evil.jpg")][InlineData("https://evil.com/abc.jpg")][InlineData("foo.png")]
+    [Theory][InlineData("../../evil.jpg")][InlineData("https://evil.com/abc.jpg")][InlineData("foo.png")][InlineData("r2_../01234567-89ab-cdef-0123-456789abcdef.jpg")][InlineData("r2_r2_01234567-89ab-cdef-0123-456789abcdef.jpg")]
     public void RejectsNonCatalogImagePaths(string path)=>Assert.False(LaunchBoxCatalog.IsImageFile(path));
+    [Fact] public void CloudHostedFrontCoversAreRetainedInTheIndex()
+    {
+        const string file="r2_01234567-89ab-cdef-0123-456789abcdef.jpg";
+        Assert.True(LaunchBoxCatalog.IsImageFile(file));
+        var rows=LaunchBoxCatalog.ReadArchive(Zip("<LaunchBox>"+Games+"<GameImage><DatabaseID>1</DatabaseID><Type>Box - Front</Type><FileName>"+file+"</FileName></GameImage></LaunchBox>"));
+        Assert.Equal(file,Assert.Single(rows[0].Images).File);
+    }
+    [Fact] public async Task OldIndexRemainsUsableOfflineUntilItCanBeRebuilt()
+    {
+        var directory=Path.Combine(root,"catalog");Directory.CreateDirectory(directory);File.WriteAllText(Path.Combine(directory,"launchbox-windows-v1.json"),System.Text.Json.JsonSerializer.Serialize(new[]{new CatalogGame("1","Old Game","","","")}));
+        using var catalog=new LaunchBoxCatalog(root);Assert.True(await catalog.EnsureAsync(false));Assert.NotNull(catalog.Exact("Old Game"));Assert.False(File.Exists(Path.Combine(directory,LaunchBoxCatalog.IndexFileName)));
+    }
     [Fact] public void CancelledCatalogParseDoesNotContinue()
     {using var c=new CancellationTokenSource();c.Cancel();Assert.ThrowsAny<OperationCanceledException>(()=>LaunchBoxCatalog.ReadArchive(Zip("<LaunchBox>"+Games+"</LaunchBox>"),c.Token));}
     public void Dispose(){if(Directory.Exists(root))Directory.Delete(root,true);}

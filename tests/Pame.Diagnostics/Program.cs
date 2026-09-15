@@ -2,6 +2,23 @@ using Pame.Core;
 using Pame.Windows;
 using System.Text.Json;
 
+if(args.FirstOrDefault()=="--covers")
+{
+    var dataRoot=Path.GetFullPath(args[1]);var output=Path.GetFullPath(args[2]);Directory.CreateDirectory(output);
+    Directory.CreateDirectory(Path.Combine(output,"catalog"));if(args.Length<4)File.Copy(Path.Combine(dataRoot,"catalog",LaunchBoxCatalog.IndexFileName),Path.Combine(output,"catalog",LaunchBoxCatalog.IndexFileName),true);
+    using var connection=new Microsoft.Data.Sqlite.SqliteConnection(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder{DataSource=Path.Combine(dataRoot,"pame.db"),Mode=Microsoft.Data.Sqlite.SqliteOpenMode.ReadOnly,Pooling=false}.ToString());connection.Open();
+    using var query=connection.CreateCommand();query.CommandText="SELECT json FROM games";using var rows=query.ExecuteReader();var games=new List<Game>();while(rows.Read())games.Add(JsonSerializer.Deserialize<Game>(rows.GetString(0))!);
+    var report=new List<object>();using var art=new MetadataService(output);if(args.Length>3)await art.Catalog.ImportArchiveAsync(args[3]);
+    foreach(var game in GameLibrary.Query(games,GameSort.Alphabetical))
+    {
+        var before=game with{};await art.EnrichAsync(game);
+        if(game.CoverImage!=before.CoverImage||game.HeroImage!=before.HeroImage||game.LogoImage!=before.LogoImage)throw new Exception("Original artwork changed for "+game.Title);
+        if(game.Store==StoreKind.Steam&&game.CardImage!=before.CardImage)throw new Exception("Steam cover changed for "+game.Title);
+        report.Add(new{game.Id,game.Title,store=game.StoreName,before=before.CardImage,after=game.CardImage,game.BoxFrontImage,game.BoxFrontChecked,changed=game.CardImage!=before.CardImage,originalArtworkPreserved=true,art.LastNotice});
+    }
+    await File.WriteAllTextAsync(Path.Combine(output,"covers-report.json"),JsonSerializer.Serialize(report,new JsonSerializerOptions{WriteIndented=true}));
+    Console.WriteLine("Verified card covers for "+report.Count+" real games using a read-only library snapshot.");return;
+}
 if(args.FirstOrDefault()=="--snapshot")
 {
     using var connection=new Microsoft.Data.Sqlite.SqliteConnection(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder{DataSource=Path.Combine(Path.GetFullPath(args[1]),"pame.db"),Mode=Microsoft.Data.Sqlite.SqliteOpenMode.ReadOnly,Pooling=false}.ToString());connection.Open();

@@ -15,6 +15,8 @@ An extracted `Desktop/YGO Power of Chaos/joey_pc.exe` can be matched to **Yu-Gi-
 
 ## Sources researched and chosen
 
+From 0.4.5, the tall cards in Games and Recently played prefer **LaunchBox Box - Front** images for non-Steam games. Original store artwork remains as fallback, and backgrounds/logos are independent. Steam cards retain their Steam artwork. Explicit manual artwork selections remain available. The catalog index is rebuilt once to include LaunchBox's `r2_` image filenames; the older index remains usable while offline.
+
 | Source | Access | Use in Pame |
 | --- | --- | --- |
 | [LaunchBox Games Database](https://gamesdb.launchbox-app.com/) | Public downloadable catalog; no login or key | Primary catalog for classic and modern Windows games, alternate names, metadata, front covers, backgrounds/screenshots and clear logos. |

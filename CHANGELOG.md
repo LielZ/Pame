@@ -1,3 +1,11 @@
+# Pame 0.4.5 - Portrait covers for every store
+
+- Prefer LaunchBox Box - Front artwork for non-Steam game cards, retaining existing store images as fallback. Keep backgrounds, logos and Steam cards unchanged.
+- Separate preferred card covers from original artwork, preserve them across library scans and refresh existing libraries without waiting for the old metadata cache to expire.
+- Recognize LaunchBox r2_ image filenames and rebuild the catalog index once; keep the older index available if offline.
+- Prefer the verified standard Battlefield 6 front cover when the base game is selected.
+- Do not fetch Steam cover images for another store's games as an automatic fallback. Explicit manual artwork choices remain available.
+
 # Pame 0.4.4 - More precise standalone discovery
 
 - Apply system and helper directory exclusions to all ancestors, including registry-supplied scan roots.

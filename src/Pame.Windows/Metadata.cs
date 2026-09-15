@@ -18,7 +18,7 @@ public sealed class MetadataService : IDisposable
     {
         cache=Path.Combine(dataRoot,"artwork");Directory.CreateDirectory(cache);Catalog=new(dataRoot);
         http=new(handler??new HttpClientHandler{AllowAutoRedirect=false}){Timeout=TimeSpan.FromSeconds(15)};
-        http.DefaultRequestHeaders.UserAgent.ParseAdd("Pame/0.4.3 (+https://github.com/LielZ/Pame)");
+        http.DefaultRequestHeaders.UserAgent.ParseAdd("Pame/0.4.5 (+https://github.com/LielZ/Pame)");
     }
     public static string NormalizeTitle(string title)=>new(title.Where(char.IsLetterOrDigit).Select(char.ToUpperInvariant).ToArray());
     public static ArtworkMatch? ExactMatch(IEnumerable<ArtworkMatch> matches,string title)
@@ -46,6 +46,8 @@ public sealed class MetadataService : IDisposable
         try
         {
             LastNotice="";if(game.ArtworkProvider.Length==0)PortableDiscovery.AttachLocalArtwork(game);
+            if(game.Store!=StoreKind.Steam && game.ArtworkProvider!="Steam" && (force || game.BoxFrontChecked==null || game.BoxFrontChecked<DateTimeOffset.UtcNow.AddDays(-1)))
+                await RefreshBoxFront(game,ct);
             if(!force&&game.ArtworkChecked>DateTimeOffset.UtcNow.AddDays(-1))return;
             var id=uint.TryParse(game.MetadataAppId,out _)?game.MetadataAppId:game.Store==StoreKind.Steam?game.StoreId:"";
             await Catalog.EnsureAsync(true,ct);
@@ -72,9 +74,38 @@ public sealed class MetadataService : IDisposable
         {LastNotice="Artwork is unavailable right now. Cached images are still available.";Log.Write("metadata.unavailable",new{type=e.GetType().Name});}
         finally{gate.Release();}
     }
+    async Task RefreshBoxFront(Game game,CancellationToken ct)
+    {
+        // A card cover is independent of the original store artwork and wallpaper.
+        // Check it even when the older metadata cache is still fresh.
+        if(!await Catalog.EnsureAsync(true,ct))return;
+        var source=Catalog.Get(game.CatalogId)??Catalog.Exact(game.Title);
+        if(source!=null)
+        {
+            game.CatalogId=source.Id;
+            foreach(var asset in source.Images.Where(i=>i.Kind=="Box - Front").OrderBy(i=>BoxFrontRank(source,i,game.Title)))
+            {
+                var cover=await Download("lb-"+asset.File,"https://images.launchbox-app.com/"+asset.File,ct);
+                if(cover.Length==0)continue;
+                game.BoxFrontImage=cover;
+                var credit="box-front: LaunchBox Games Database / "+source.PageUrl;
+                game.ArtworkCredits=string.Join("\n",game.ArtworkCredits.Split('\n',StringSplitOptions.RemoveEmptyEntries).Where(x=>!x.StartsWith("box-front:",StringComparison.Ordinal)).Append(credit));
+                break;
+            }
+        }
+        if(LastNotice.Length==0 && Catalog.Updated!=null)game.BoxFrontChecked=DateTimeOffset.UtcNow;
+    }
+    static int BoxFrontRank(CatalogGame game,CatalogImage image,string title)
+    {
+        // This catalog entry lists Phantom Edition covers before the standard PC
+        // cover. Prefer the visually verified standard art for the base title.
+        if(game.Id=="460115" && !title.Contains("Phantom",StringComparison.OrdinalIgnoreCase) && image.File=="r2_fc97e9d7-415b-44b8-a031-ecebda9ad720.jpg")return -1;
+        return image.Region=="World"?0:image.Region is "North America" or "United States"?1:image.Region.Length==0?2:3;
+    }
     async Task Steam(Game game,string id,CancellationToken ct)
     {
-        if(!File.Exists(game.CoverImage))game.CoverImage=await Download(id+"-cover.jpg",$"https://cdn.akamai.steamstatic.com/steam/apps/{id}/library_600x900.jpg",ct);
+        var allowCover=game.Store is StoreKind.Steam or StoreKind.Standalone || game.ArtworkProvider=="Steam";
+        if(allowCover&&!File.Exists(game.CoverImage))game.CoverImage=await Download(id+"-cover.jpg",$"https://cdn.akamai.steamstatic.com/steam/apps/{id}/library_600x900.jpg",ct);
         if(!File.Exists(game.HeroImage))game.HeroImage=await Download(id+"-hero.jpg",$"https://cdn.akamai.steamstatic.com/steam/apps/{id}/library_hero.jpg",ct);
         if(!File.Exists(game.LogoImage))game.LogoImage=await Download(id+"-logo.png",$"https://cdn.akamai.steamstatic.com/steam/apps/{id}/logo.png",ct);
         if(game.MetadataSource.Contains("Steam")&&game.MetadataUpdated>DateTimeOffset.UtcNow.AddDays(-14))return;
@@ -86,7 +117,7 @@ public sealed class MetadataService : IDisposable
         if(data.TryGetProperty("genres",out var genres))game.Genres=string.Join(" · ",genres.EnumerateArray().Select(x=>x.GetProperty("description").GetString()));
         if(data.TryGetProperty("controller_support",out var controller))game.ControllerSupport=controller.GetString() is "full" or "partial";
         if(data.TryGetProperty("categories",out var categories))game.LocalMultiplayer=categories.EnumerateArray().Any(x=>x.GetProperty("id").GetInt32() is 24 or 37 or 39);
-        if(!File.Exists(game.CoverImage)&&data.TryGetProperty("header_image",out var card))game.CoverImage=await Download(id+"-card.jpg",card.GetString()??"",ct);
+        if(allowCover&&!File.Exists(game.CoverImage)&&data.TryGetProperty("header_image",out var card))game.CoverImage=await Download(id+"-card.jpg",card.GetString()??"",ct);
         if(!File.Exists(game.HeroImage)&&data.TryGetProperty("background_raw",out var bg))game.HeroImage=await Download(id+"-background.jpg",bg.GetString()??"",ct);
         game.MetadataSource=game.CatalogId.Length>0?"LaunchBox + Steam":"Steam";game.MetadataUpdated=DateTimeOffset.UtcNow;
     }

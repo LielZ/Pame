@@ -235,7 +235,7 @@ public partial class MainWindow : Window
     int HeroPixelWidth=>(int)Math.Clamp(Math.Ceiling(ActualWidth*VisualTreeHelper.GetDpi(this).DpiScaleX/640)*640,1920,3840);
     async Task WarmArtwork(IEnumerable<Game> library)
     {
-        var requests=GameLibrary.Query(library,GameSort.RecentlyPlayed).Take(32).SelectMany(g=>new[]{(g.CoverImage,440),(g.CoverImage,550),(g.HeroImage,HeroPixelWidth),(g.HeroImage,600),(g.LogoImage,1100)}).Where(r=>File.Exists(r.Item1)).Distinct().Where(r=>!images.ContainsKey(Path.GetFullPath(r.Item1)+"|"+r.Item2)).ToArray();
+        var requests=GameLibrary.Query(library,GameSort.RecentlyPlayed).Take(32).SelectMany(g=>new[]{(g.CardImage,440),(g.CardImage,550),(g.HeroImage,HeroPixelWidth),(g.HeroImage,600),(g.LogoImage,1100)}).Where(r=>File.Exists(r.Item1)).Distinct().Where(r=>!images.ContainsKey(Path.GetFullPath(r.Item1)+"|"+r.Item2)).ToArray();
         if(requests.Length==0)return;
         var decoded=await Task.Run(()=>requests.Select(r=>{try{return (Key:Path.GetFullPath(r.Item1)+"|"+r.Item2,Image:DecodeArtwork(r.Item1,r.Item2));}catch(Exception e){Log.Error("image.preload",e);return (Key:"",Image:(BitmapImage?)null);}}).ToArray(),lifetime.Token);
         if(closing)return;if(images.Count>150)images.Clear();foreach(var entry in decoded)if(entry.Image!=null)images[entry.Key]=entry.Image;

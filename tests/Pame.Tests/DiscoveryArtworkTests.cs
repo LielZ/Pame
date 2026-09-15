@@ -11,7 +11,7 @@ public sealed class DiscoveryArtworkTests : IDisposable
 {
     readonly string root=Path.Combine(Path.GetTempPath(),"Pame-discovery-tests-"+Guid.NewGuid().ToString("N"));
     string Put(string relative,string contents="fixture") {var p=Path.GetFullPath(Path.Combine(root,relative));Directory.CreateDirectory(Path.GetDirectoryName(p)!);if(p.EndsWith(".exe",StringComparison.OrdinalIgnoreCase))ExecutableFixture.Write(p);else File.WriteAllText(p,contents);return p;}
-    public DiscoveryArtworkTests(){Put("catalog/launchbox-windows-v1.json",JsonSerializer.Serialize(new[]{new CatalogGame("99999","Catalog Sentinel","","","")}));}
+    public DiscoveryArtworkTests(){Put("catalog/"+LaunchBoxCatalog.IndexFileName,JsonSerializer.Serialize(new[]{new CatalogGame("99999","Catalog Sentinel","","","")}));}
     string Unity(string name="Moon Quest") {var exe=Put(name+"/Moon.exe");Put(name+"/UnityPlayer.dll");Put(name+"/Moon_Data/globalgamemanagers");return exe;}
     [Fact] public async Task FindsExtractedUnityAndKeepsLocalArtwork()
     {
@@ -70,7 +70,7 @@ public sealed class DiscoveryArtworkTests : IDisposable
     [Fact] public async Task LaunchBoxProvidesArtworkWithoutAnyCredentialsOrSteamMatch()
     {
         var file="01234567-89ab-cdef-0123-456789abcdef.png";
-        Put("catalog/launchbox-windows-v1.json",JsonSerializer.Serialize(new[]{new CatalogGame("99","Moon Quest","Description","Developer","Adventure"){Images=[new(file,"Box - Front",""),new(file,"Fanart - Background",""),new(file,"Clear Logo","")]}}));
+        Put("catalog/"+LaunchBoxCatalog.IndexFileName,JsonSerializer.Serialize(new[]{new CatalogGame("99","Moon Quest","Description","Developer","Adventure"){Images=[new(file,"Box - Front",""),new(file,"Fanart - Background",""),new(file,"Clear Logo","")]}}));
         using var service=new MetadataService(root,new Handler(r=>{Assert.Null(r.Headers.Authorization);return r.RequestUri!.Host=="images.launchbox-app.com"?Image():Json(new{items=Array.Empty<object>()});}));
         var g=new Game{Id="manual:test",Title="Moon Quest",Store=StoreKind.Standalone};await service.EnrichAsync(g);Assert.Equal("99",g.CatalogId);Assert.True(File.Exists(g.CoverImage));Assert.True(File.Exists(g.HeroImage));Assert.True(File.Exists(g.LogoImage));Assert.Contains("LaunchBox",g.ArtworkCredits);
     }

@@ -17,6 +17,7 @@ public sealed record CatalogGame(string Id,string Title,string Description,strin
 public sealed class LaunchBoxCatalog : IDisposable
 {
     public const string DownloadUrl="https://gamesdb.launchbox-app.com/Metadata.zip";
+    public const string IndexFileName="launchbox-windows-v2.json";
     readonly string directory,index;
     readonly HttpClient http;
     readonly SemaphoreSlim gate=new(1,1);
@@ -24,22 +25,24 @@ public sealed class LaunchBoxCatalog : IDisposable
     Dictionary<string,List<CatalogGame>> names=[];
     readonly System.Collections.Concurrent.ConcurrentDictionary<string,List<CatalogGame>> searchCache=new();
     DateTimeOffset retryAfter;
+    bool legacyIndex;
     public string Status {get;private set;}="Catalog not downloaded yet";
     public int Count=>games.Count;
     public DateTimeOffset? Updated=>File.Exists(index)?File.GetLastWriteTimeUtc(index):null;
     public LaunchBoxCatalog(string dataRoot,HttpMessageHandler? handler=null)
-    {directory=Path.Combine(dataRoot,"catalog");index=Path.Combine(directory,"launchbox-windows-v1.json");http=new(handler??new HttpClientHandler{AllowAutoRedirect=false}){Timeout=TimeSpan.FromMinutes(10)};http.DefaultRequestHeaders.UserAgent.ParseAdd("Pame/0.4.3 (+https://github.com/LielZ/Pame)");}
+    {directory=Path.Combine(dataRoot,"catalog");index=Path.Combine(directory,IndexFileName);http=new(handler??new HttpClientHandler{AllowAutoRedirect=false}){Timeout=TimeSpan.FromMinutes(10)};http.DefaultRequestHeaders.UserAgent.ParseAdd("Pame/0.4.5 (+https://github.com/LielZ/Pame)");}
     public async Task<bool> EnsureAsync(bool online,CancellationToken ct=default,IProgress<string>? progress=null,bool refresh=false)
     {
         await gate.WaitAsync(ct);
         try
         {
-            if(games.Count==0&&File.Exists(index))
+            var cachedIndex=File.Exists(index)?index:Path.Combine(directory,"launchbox-windows-v1.json");
+            if(games.Count==0&&File.Exists(cachedIndex))
             {
-                try{if(new FileInfo(index).Length<128*1024*1024){var data=await File.ReadAllTextAsync(index,ct);var rows=await Task.Run(()=>JsonSerializer.Deserialize<List<CatalogGame>>(data),ct);if(rows is {Count:>0})await Task.Run(()=>SetGames(rows),ct);}}
+                try{if(new FileInfo(cachedIndex).Length<128*1024*1024){var data=await File.ReadAllTextAsync(cachedIndex,ct);var rows=await Task.Run(()=>JsonSerializer.Deserialize<List<CatalogGame>>(data),ct);if(rows is {Count:>0}){await Task.Run(()=>SetGames(rows),ct);legacyIndex=cachedIndex!=index;}}}
                 catch(Exception e) when(e is JsonException or IOException){Status="Cached catalog needs to be downloaded again";}
             }
-            if(!refresh&&games.Count>0){Status=$"{Count:N0} Windows games · ready offline";return true;}
+            if(!refresh&&games.Count>0&&!legacyIndex){Status=$"{Count:N0} Windows games · ready offline";return true;}
             if(!online||retryAfter>DateTimeOffset.UtcNow)return games.Count>0;
             Directory.CreateDirectory(directory);var temp=Path.Combine(directory,"metadata.partial");
             try
@@ -53,7 +56,7 @@ public sealed class LaunchBoxCatalog : IDisposable
                 }
                 Status="Indexing Windows games and artwork…";progress?.Report(Status);
                 var rows=await Task.Run(()=>ReadArchive(temp,ct),ct);if(rows.Count<100)throw new InvalidDataException("Incomplete game catalog");
-                await Save(rows,ct);await Task.Run(()=>SetGames(rows),ct);Status=$"{Count:N0} Windows games · ready offline";progress?.Report(Status);return true;
+                await Save(rows,ct);await Task.Run(()=>SetGames(rows),ct);legacyIndex=false;Status=$"{Count:N0} Windows games · ready offline";progress?.Report(Status);return true;
             }
             catch(OperationCanceledException) when(ct.IsCancellationRequested){throw;}
             catch(Exception e) when(e is IOException or HttpRequestException or TaskCanceledException or XmlException or InvalidDataException)
@@ -63,7 +66,7 @@ public sealed class LaunchBoxCatalog : IDisposable
         finally{gate.Release();}
     }
     public async Task ImportArchiveAsync(string path,CancellationToken ct=default)
-    {await gate.WaitAsync(ct);try{var rows=await Task.Run(()=>ReadArchive(path,ct),ct);await Save(rows,ct);await Task.Run(()=>SetGames(rows),ct);}finally{gate.Release();}}
+    {await gate.WaitAsync(ct);try{var rows=await Task.Run(()=>ReadArchive(path,ct),ct);await Save(rows,ct);await Task.Run(()=>SetGames(rows),ct);legacyIndex=false;}finally{gate.Release();}}
     async Task Save(List<CatalogGame> rows,CancellationToken ct)
     {Directory.CreateDirectory(directory);var temp=index+".tmp";try{var json=await Task.Run(()=>JsonSerializer.Serialize(rows),ct);await File.WriteAllTextAsync(temp,json,ct);File.Move(temp,index,true);}finally{if(File.Exists(temp))File.Delete(temp);}}
     void SetGames(List<CatalogGame> rows)
@@ -137,6 +140,6 @@ public sealed class LaunchBoxCatalog : IDisposable
         }
         return result.Values.ToList();
     }
-    public static bool IsImageFile(string file)=>Regex.IsMatch(file,@"^[a-fA-F0-9-]{36}\.(png|jpg|jpeg)$",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant)&&Guid.TryParse(Path.GetFileNameWithoutExtension(file),out _);
+    public static bool IsImageFile(string file)=>Regex.IsMatch(file,@"^(?:r2_)?[a-fA-F0-9-]{36}\.(png|jpg|jpeg)$",RegexOptions.IgnoreCase|RegexOptions.CultureInvariant)&&Guid.TryParse(Path.GetFileNameWithoutExtension(file.StartsWith("r2_",StringComparison.OrdinalIgnoreCase)?file[3..]:file),out _);
     public void Dispose()=>http.Dispose();
 }

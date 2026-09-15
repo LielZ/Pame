@@ -20,6 +20,9 @@ public sealed record Game
     public string UninstallUri { get; init; } = "";
     public string ManifestPath { get; init; } = "";
     public string CoverImage { get; set; } = "";
+    public string BoxFrontImage { get; set; } = "";
+    public DateTimeOffset? BoxFrontChecked { get; set; }
+    [JsonIgnore] public string CardImage => Store!=StoreKind.Steam && File.Exists(BoxFrontImage) ? BoxFrontImage : CoverImage;
     public string HeroImage { get; set; } = "";
     public string LogoImage { get; set; } = "";
     public string CatalogId { get; set; } = "";
@@ -116,6 +119,7 @@ public static class GameLibrary
         fresh.Favorite = previous.Favorite; fresh.LocalPlaySeconds = previous.LocalPlaySeconds;
         fresh.LibraryHidden=previous.LibraryHidden;fresh.CustomTitle=previous.CustomTitle;if(previous.CustomTitle)fresh.Title=previous.Title;
         fresh.ArtworkProvider=previous.ArtworkProvider;
+        fresh.BoxFrontImage=previous.BoxFrontImage;fresh.BoxFrontChecked=previous.BoxFrontChecked;
         fresh.LogoImage=File.Exists(fresh.LogoImage)?fresh.LogoImage:previous.LogoImage;fresh.ArtworkCredits=previous.ArtworkCredits;
         fresh.ArtworkChecked=previous.CatalogId.Length==0&&fresh.CatalogId.Length>0?null:previous.ArtworkChecked;
         if(previous.CatalogId.Length>0)fresh.CatalogId=previous.CatalogId;
