@@ -15,6 +15,8 @@ try {
     Copy-Item -LiteralPath docs/VALIDATION-0.3.3.md,docs/BACKGROUND-GAMING-RESEARCH.md -Destination dist/app/docs
     Copy-Item -LiteralPath docs/VALIDATION-0.4.0.md,docs/WEBVIEW2-SOURCE.json -Destination dist/app/docs
     Copy-Item -LiteralPath docs/VALIDATION-0.4.1.md -Destination dist/app/docs
+    Copy-Item -LiteralPath docs/VALIDATION-0.4.2.md,docs/UPDATER.md,docs/USER_GUIDE.md -Destination dist/app/docs
+    Copy-Item -LiteralPath docs/images -Destination dist/app/docs -Recurse -Force
     Copy-Item -LiteralPath licenses -Destination dist/app -Recurse -Force
     if ($Package) {
         $browserBootstrapper = Join-Path $projectRoot 'packaging/runtimes/MicrosoftEdgeWebview2Setup.exe'
@@ -30,5 +32,10 @@ try {
         Copy-Item -LiteralPath dist/Pame-ServiceAccess-Setup.exe -Destination dist/app/Pame-ServiceAccess-Setup.exe -Force
         & $compiler /Qp packaging/Pame.iss
         if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
+        $appProject = [xml](Get-Content -LiteralPath src/Pame.App/Pame.App.csproj -Raw)
+        $releaseVersion = [string]$appProject.Project.PropertyGroup.Version
+        $installerName = "Pame-Setup-$releaseVersion-x64.exe"
+        $installerHash = (Get-FileHash -LiteralPath (Join-Path dist $installerName) -Algorithm SHA256).Hash.ToLowerInvariant()
+        [IO.File]::WriteAllText((Join-Path $projectRoot 'dist/SHA256SUMS.txt'), "$installerHash  $installerName`n", [Text.UTF8Encoding]::new($false))
     }
 } finally { Pop-Location }

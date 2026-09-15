@@ -2,7 +2,7 @@
 
 ## Start
 
-- Download and run [Pame-Setup-0.4.1-x64.exe](https://github.com/LielZ/Pame/releases/download/v0.4.1/Pame-Setup-0.4.1-x64.exe) from [GitHub Releases](https://github.com/LielZ/Pame/releases). Requires Windows 10 version 2004 or later, x64. The installer includes the .NET runtime; no SDK is needed. If Microsoft WebView2 is missing, setup downloads its runtime for Pame browser.
+- Download and run [Pame-Setup-0.4.2-x64.exe](https://github.com/LielZ/Pame/releases/download/v0.4.2/Pame-Setup-0.4.2-x64.exe) from [GitHub Releases](https://github.com/LielZ/Pame/releases). Requires Windows 10 version 2004 or later, x64. The installer includes the .NET runtime; no SDK is needed. If Microsoft WebView2 is missing, setup downloads its runtime for Pame browser.
 - Open **Pame** from the desktop or Start menu. It opens fullscreen by default.
 - Connect a controller over USB or pair one in **Controllers**. Sign into your stores once if they request authentication.
 - **Settings → Launch at sign-in** enables startup for your Windows account.
@@ -10,6 +10,10 @@
 - **Settings → Pame on GitHub** opens the repository, release downloads and feedback inside Pame browser.
 
 The main installer runs for your Windows account. Optional Windows service access has a separate setup-time administrator confirmation and is off by default. The alpha installer is unsigned. Updates preserve your library and settings; download a newer installer from Releases and run it over the existing installation. A SHA-256 checksum file accompanies each published installer.
+
+## Updates
+
+**Settings → Updates** checks GitHub Releases, downloads and verifies the installer, and offers **Restart & update**. Automatic updates are on by default: new releases download when Pame is not running a game and install at the next Pame startup. Pame reopens after installation. Turn automatic updates off for manual control; disable public-alpha releases to use the stable channel. Version 0.4.1 and earlier need the 0.4.2 installer once to gain this feature. [Update behavior and recovery](UPDATER.md).
 
 ## Controls
 

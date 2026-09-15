@@ -1,3 +1,11 @@
+# Pame 0.4.2
+
+- Add Settings → Updates with automatic GitHub release checks, verified background downloads, installation at the next Pame startup and a controller-operated Restart & update action.
+- Offer automatic/manual updates and public-alpha/stable release choices. Defer updates during Pame game sessions; cancel active downloads when launching a game.
+- Validate release versions, repository URLs, HTTPS redirects, file sizes and SHA-256 against both GitHub asset digests and the release checksum file.
+- Install through a separate helper after Pame restores Windows and exits. Preserve local data, browser sessions, installed location and startup choice; reopen Pame after installation. Do not force-close games, reboot Windows or elevate the optional service add-on.
+- Record failed installs without automatic restart loops. Add a draft-first publishing script and checksum generation to the package build.
+
 # Pame 0.4.1
 
 - Add a Now Playing card pinned under the Quick menu header. Show title, artist/source, artwork when Windows provides it, play state, timeline and supported transport controls.

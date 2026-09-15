@@ -67,6 +67,7 @@ public partial class App : Application
             var output=Path.GetFullPath(e.Args.SkipWhile(a=>a!="--diagnose").Skip(1).FirstOrDefault()??"diagnostics.json");
             await File.WriteAllTextAsync(output,JsonSerializer.Serialize(result,new JsonSerializerOptions{WriteIndented=true}));Shutdown();return;
         }
+        if(UpdateInstaller.IsRunning){Shutdown();return;}
         instance=new Mutex(true,"Local\\Pame.GamingShell",out bool created);
         if(!created&&!e.Args.Contains("--smoke-ui")){Shutdown();return;}
         var data=Environment.GetEnvironmentVariable("PAME_DATA_DIR")??Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Pame");
@@ -81,6 +82,21 @@ public partial class App : Application
         using(var preferences=new Database(Path.Combine(data,"pame.db")))
         {
             var config=preferences.Get("shell",new ShellSettings());
+            if(!safe&&!e.Args.Contains("--smoke-ui")&&config.AutomaticUpdates&&UpdateInstaller.IsInstalled(AppContext.BaseDirectory))
+            {
+                try
+                {
+                    using var updates=new UpdateService(data);
+                    var current=new Version(typeof(App).Assembly.GetName().Version!.ToString(3));
+                    if(await updates.ReadPendingAsync(current,config.PreviewUpdates) is { } pending)
+                    {
+                        ShutdownMode=ShutdownMode.OnExplicitShutdown;
+                        await UpdateInstaller.StartAsync(updates,pending,AppContext.BaseDirectory);
+                        Shutdown();return;
+                    }
+                }
+                catch(Exception error){Log.Error("update.startup",error);ShutdownMode=ShutdownMode.OnLastWindowClose;}
+            }
             if(e.Args.Contains("--fullscreen")){config.Fullscreen=true;preferences.Set("shell",config);}
             // WPF chooses the active adapter. The presence of an unused virtual adapter
             // is not evidence that the actual display needs software rendering.
@@ -91,7 +107,7 @@ public partial class App : Application
         var launchId=e.Args.SkipWhile(a=>a!="--launch-game").Skip(1).FirstOrDefault();
         var window=new MainWindow(data,safe,e.Args.Contains("--windowed"),e.Args.Contains("--smoke-ui"),launchId);
         MainWindow=window;window.Show();window.Activate();
-        Log.Write("app.started",new{version="0.4.1",safe,os=Environment.OSVersion.VersionString});
+        Log.Write("app.started",new{version=typeof(App).Assembly.GetName().Version!.ToString(3),safe,os=Environment.OSVersion.VersionString});
         var timer=new System.Windows.Threading.DispatcherTimer{Interval=TimeSpan.FromMinutes(2)};
         timer.Tick+=(_,_)=>{File.WriteAllText(crashesFile,"[]");timer.Stop();};timer.Start();
     }

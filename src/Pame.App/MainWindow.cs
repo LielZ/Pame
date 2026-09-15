@@ -89,7 +89,7 @@ public partial class MainWindow : Window
         Loaded+=async(_,_)=>
         {
             if(!safeMode){controllers.Initialize();sensors.Start();}inputTimer.Start();clockTimer.Start();performance.Start();
-            Render();await ApplyConsoleMode();await RefreshLibrary();if(safeMode)Toast("Recovery mode · controller polling and fullscreen are off. Explorer is available.");
+            Render();_=InitializeUpdates();await ApplyConsoleMode();await RefreshLibrary();if(safeMode)Toast("Recovery mode · controller polling and fullscreen are off. Explorer is available.");
             if(Environment.GetEnvironmentVariable("PAME_BENCHMARK") is {Length:>0} benchmark)await BenchmarkUi(benchmark);
             else if(smoke)await SmokeUi();
             else if(launchGameId!=null&&games.FirstOrDefault(g=>g.Id==launchGameId) is { } requestedGame)await LaunchGameAsync(requestedGame);
@@ -117,6 +117,7 @@ public partial class MainWindow : Window
         if(cleanupBusy){e.Cancel=true;Toast("Wait for the selected app removals to finish before exiting.");return;}
         if(closing)return;e.Cancel=true;closing=true;desktop.Enabled=false;desktopHint?.Close();notificationWindow?.Close();pendingBrowserConsent?.Invoke(false);pendingBrowserConsent=null;browser?.Dispose();inputTimer.Stop();clockTimer.Stop();lifetime.Cancel();
         await Task.Yield();await sessions.StopTrackingAsync();await backgroundMode.End();backgroundMode.CloseServiceAccess();try{await consoleShell.LeaveAsync();}catch(Exception error){Log.Error("desktop.exitRecovery",error);}await presentMon.StopAsync();overlay?.Close();bluetooth.Dispose();controllers.Dispose();performance.Dispose();sensors.Dispose();metadata.Dispose();audio.Dispose();sound.Dispose();sessions.Dispose();optimization.Recover();SaveSettings();db.Dispose();
+        updater?.Dispose();
         if(hwnd!=null){UnregisterHotKey(hwnd.Handle,1);UnregisterHotKey(hwnd.Handle,2);}
         Close();
     }

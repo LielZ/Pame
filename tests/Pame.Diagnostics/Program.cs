@@ -2,6 +2,17 @@ using Pame.Core;
 using Pame.Windows;
 using System.Text.Json;
 
+if(args.FirstOrDefault()=="--update")
+{
+    var updateRoot=Path.GetFullPath(args[1]);Directory.CreateDirectory(updateRoot);Log.DirectoryPath=Path.Combine(updateRoot,"logs");
+    using var updates=new UpdateService(updateRoot);
+    var release=await updates.CheckAsync(Version.Parse(args[2]),true)??throw new Exception("No newer public release found.");
+    var pending=await updates.DownloadAsync(release);
+    await File.WriteAllTextAsync(Path.Combine(updateRoot,"download-report.json"),JsonSerializer.Serialize(new{release.Version,pending.Sha256,release.Installer.Size,verified=await UpdateService.VerifyFileAsync(updates.InstallerPath(release),release.Installer.Size,pending.Sha256)}));
+    if(args.Length>3)await UpdateInstaller.StartAsync(updates,pending,Path.GetFullPath(args[3]));
+    Console.WriteLine("Verified GitHub update: "+release.Version);return;
+}
+
 var root=Path.GetFullPath(args.FirstOrDefault()??"artifacts/integration");Directory.CreateDirectory(root);Log.DirectoryPath=Path.Combine(root,"logs");
 var results=new Dictionary<string,object>();
 using(var sensors=new SensorService())

@@ -97,6 +97,7 @@ public partial class MainWindow
         Setting("Controller notifications","Connection alerts and a low battery warning over your game.",settings.LowBatteryThreshold==0?"Battery alerts off":$"Low battery at {settings.LowBatteryThreshold}%","notifications",ShowNotificationSettings);
         Setting("Diagnostics","Check discovery and hardware support on this PC.",scanWarnings.Count==0?"Library up to date":scanWarnings.Count+" scan notices","diagnostics",ShowDiagnostics);
         Setting("Pame on GitHub","About Pame, source code, installer downloads and feedback.","Project & releases","project",ShowProject);
+        Setting("Updates","Get new versions from GitHub and keep Pame up to date.",pendingUpdate is not null?"Ready to install":settings.AutomaticUpdates?"Automatic updates on":"Manual updates","updates",ShowUpdates);
         Setting("Back to Windows","Exit Pame and return to your normal desktop.","Exit Pame","exit",()=>Confirm("Return to Windows?","Pame will close and restore its temporary power settings. Running games stay open.","Exit Pame",Close));
         Place(page,new ScrollViewer{Content=wrap,Width=1330,Height=574,Padding=new(12)},246,264);
     }
@@ -106,7 +107,7 @@ public partial class MainWindow
         ("Download releases",()=>OpenProjectPage(ProjectUrl+"/releases")),
         ("Report a problem / suggest a feature",()=>OpenProjectPage(ProjectUrl+"/issues")),
         ("Back",HideModal)
-    },"Pame brings your PC games, stores, media and system controls into one interface for your controller. Spend less time switching launchers and reaching for a keyboard.\n\nVersion 0.4.1 · Windows x64 · All links open in Pame browser.");
+    },$"Pame brings your PC games, stores, media and system controls into one interface for your controller. Spend less time switching launchers and reaching for a keyboard.\n\nVersion {CurrentVersion} · Windows x64 · All links open in Pame browser.");
     void OpenProjectPage(string url){HideModal();OpenBrowser();if(browser!.CurrentUrl=="")browser.Go(url);else if(browser.CurrentUrl!=url)browser.AddTab(url);}
     void ShowAudio()=>ShowChoices("Sound",new (string,Action)[]{("Volume −",()=>{audio.ChangeVolume(-5);ShowAudio();}), ("Volume +",()=>{audio.ChangeVolume(5);ShowAudio();}), ("Mute / unmute",audio.ToggleMute), ("Select output device",ShowAudioOutputs), ("Done",HideModal)},audio.DefaultName+"   ·   "+audio.Volume+"%");
     void ShowAudioOutputs()=>ShowChoices("Choose an audio output",audio.Outputs().Select(d=>(d.Name,(Action)(()=>{try{audio.SetOutput(d.Id);Toast("Audio output: "+d.Name);ShowAudio();}catch(Exception e){Toast("Windows could not switch this output: "+e.Message);OpenExternalUri("ms-settings:sound");}}))),"Your current output: "+audio.DefaultName);
@@ -119,7 +120,7 @@ public partial class MainWindow
     {
         var p=performance.Current;
         var sensor=sensors.Current;
-        var text=$"Pame 0.4.1  ·  {Environment.OSVersion.VersionString}\n{games.Count(g=>g.Installed)} installed games · {stores.Count(s=>s.Installed)} installed stores\nControllers: {controllers.Status}\nRAM: {p.UsedRamGb:0.0} / {p.TotalRamGb:0.0} GB\nGPU engine: {(p.Gpu==null?"unavailable":"available")} · dedicated GPU memory: {(p.VramGb is double v?$"{v:0.00} GB":"unavailable")}\nFPS: {presentMon.Status}\nGPU: {sensor.GpuName} · {(sensor.GpuTemperature is double t?$"{t:0}°C":"Temperature unavailable")}\n{sensor.Status}\n"+(scanWarnings.Count>0?$"\n{scanWarnings.Count} manifest notice(s); details are in the local log.":"");
+        var text=$"Pame {CurrentVersion}  ·  {Environment.OSVersion.VersionString}\n{games.Count(g=>g.Installed)} installed games · {stores.Count(s=>s.Installed)} installed stores\nControllers: {controllers.Status}\nRAM: {p.UsedRamGb:0.0} / {p.TotalRamGb:0.0} GB\nGPU engine: {(p.Gpu==null?"unavailable":"available")} · dedicated GPU memory: {(p.VramGb is double v?$"{v:0.00} GB":"unavailable")}\nFPS: {presentMon.Status}\nGPU: {sensor.GpuName} · {(sensor.GpuTemperature is double t?$"{t:0}°C":"Temperature unavailable")}\n{sensor.Status}\n"+(scanWarnings.Count>0?$"\n{scanWarnings.Count} manifest notice(s); details are in the local log.":"");
         ShowChoices("System diagnostics",new (string,Action)[]{("Refresh library",()=>{HideModal();_=RefreshLibrary();}), ("Open logs folder",()=>OpenExternalFolder(Log.DirectoryPath)), ("Done",HideModal)},text);
     }
     void ShowPowerMenu()=>ShowChoices("Take a break",new (string,Action)[]{("Keep playing",HideModal), ("Sleep",()=>Confirm("Put your PC to sleep?","Your open apps will stay in memory.","Sleep",()=>SystemActions.Power("sleep"))), ("Restart PC",()=>Confirm("Restart this PC?","Save your progress before continuing.","Restart",()=>SystemActions.Power("restart"))), ("Shut down PC",()=>Confirm("Shut down this PC?","Save your progress before continuing.","Shut down",()=>SystemActions.Power("shutdown"))), ("Exit to Windows",()=>Confirm("Return to Windows?","Close Pame and restore its temporary settings.","Exit Pame",Close))});

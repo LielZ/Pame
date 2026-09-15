@@ -24,7 +24,8 @@ public partial class MainWindow
     }
     async Task LaunchGameAsync(Game game)
     {
-        if(preparingGame)return;
+        if(preparingGame||installingUpdate)return;
+        updateDownload?.Cancel();
         HideModal();
         if(sessions.ActiveGame!=null){if(sessions.ActiveGame.Id==game.Id&&!sessions.IsLaunching)sessions.Resume();else Toast("Finish or close your current game first.");return;}
         preparingGame=true;++launchGeneration;Toast("Preparing "+game.Title+"…");

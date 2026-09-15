@@ -1,4 +1,4 @@
-#define AppVersion "0.4.1"
+#define AppVersion "0.4.2"
 [Setup]
 AppId={{C031CF79-A16D-4975-8581-5CC3C736CE85}
 AppName=Pame
@@ -23,7 +23,7 @@ SetupIconFile=..\src\Pame.App\Assets\pame.ico
 CloseApplications=yes
 RestartApplications=no
 SetupLogging=yes
-VersionInfoVersion=0.4.1.0
+VersionInfoVersion=0.4.2.0
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop shortcut"; Flags: checkedonce
@@ -37,17 +37,22 @@ Source: "runtimes\MicrosoftEdgeWebview2Setup.exe"; DestDir: "{tmp}"; Flags: dele
 [Icons]
 Name: "{autoprograms}\Pame"; Filename: "{app}\Pame.exe"
 Name: "{autoprograms}\Pame Recovery"; Filename: "{app}\Pame.exe"; Parameters: "--safe-mode"
-Name: "{autodesktop}\Pame"; Filename: "{app}\Pame.exe"; Tasks: desktopicon
+Name: "{autodesktop}\Pame"; Filename: "{app}\Pame.exe"; Tasks: desktopicon; Check: IsInteractiveInstall
 
 [Registry]
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Pame"; ValueData: """{app}\Pame.exe"" --startup"; Tasks: startup; Flags: uninsdeletevalue
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Pame"; ValueData: """{app}\Pame.exe"" --startup"; Tasks: startup; Flags: uninsdeletevalue; Check: IsInteractiveInstall
 
 [Run]
 Filename: "{tmp}\MicrosoftEdgeWebview2Setup.exe"; Parameters: "/silent /install"; StatusMsg: "Preparing Pame browser..."; Flags: runhidden waituntilterminated; Check: NeedsWebView2
-Filename: "{app}\Pame.exe"; Parameters: "--install-service-access"; Tasks: serviceaccess; Flags: runhidden waituntilterminated
+Filename: "{app}\Pame.exe"; Parameters: "--install-service-access"; Tasks: serviceaccess; Flags: runhidden waituntilterminated; Check: IsInteractiveInstall
 Filename: "{app}\Pame.exe"; Description: "Launch Pame"; Flags: nowait postinstall skipifsilent
 
 [Code]
+function IsInteractiveInstall: Boolean;
+begin
+  Result := ExpandConstant('{param:PAMEUPDATE|0}') <> '1';
+end;
+
 function NeedsWebView2: Boolean;
 var Version: String;
 begin

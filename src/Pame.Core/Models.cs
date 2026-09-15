@@ -63,6 +63,8 @@ public sealed class ShellSettings
     public bool Fullscreen { get; set; } = true;
     public bool ConsoleMode { get; set; } = true;
     public bool FetchMetadata { get; set; } = true;
+    public bool AutomaticUpdates { get; set; } = true;
+    public bool PreviewUpdates { get; set; } = true;
     public int IdleMinutes { get; set; } = 7;
     public int LowBatteryThreshold { get; set; } = 15;
     public bool GamingMode { get; set; }
