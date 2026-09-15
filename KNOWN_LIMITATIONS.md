@@ -1,4 +1,4 @@
-# Known limitations — 0.4.2 alpha
+# Known limitations - 0.4.3 alpha
 
 This release adds substantial UI and Windows functionality. It does not complete or certify every production-grade item in the supplied specification.
 
@@ -29,3 +29,5 @@ This release adds substantial UI and Windows functionality. It does not complete
 - **Packaging:** unsigned, per-user x64 installer with in-app GitHub updates. Optional service access has its own administrator-installed add-on and uninstall entry. No gamepad-driven first-time installer or shell replacement. Signing, distribution hardening, accessibility/localization and longer hardware reliability tests remain before a production release.
 
 Console mode hides the Explorer taskbar and desktop icon surfaces while fullscreen. Explorer stays running for file browsing and store protocols. A separate guardian restores the saved visibility, per-monitor wallpapers and wallpaper mode when Pame exits unexpectedly. Normal exit, recovery mode and Desktop control restore Windows too. Multi-monitor, slideshow and longer Spotlight rotation behavior need broader testing; the current single-monitor Spotlight state was restored in normal and forced-exit tests. `Ctrl+Alt+Shift+Escape`, `--safe-mode` and the **Pame Recovery** shortcut provide recovery. Startup is optional and repeated rapid startup attempts open recovery mode.
+
+- **Standalone discovery and artwork (0.4.3):** scans use engine files, executable metadata and the LaunchBox Windows catalog. Obscure/renamed executables can require manual addition or edition selection. Archives, installers, ROMs, inaccessible folders, directory junctions and incomplete store downloads are excluded. Scans have a two-minute / 100,000-folder bound (30,000 for automatic scans); partial results are labelled. The first catalog download is about 103 MiB; its Windows index is cached locally. No account or API key is used. Some games have no separate logo or only low-resolution art. Source availability and complete catalog coverage are not guaranteed. See [discovery details](docs/GAME-DISCOVERY.md).

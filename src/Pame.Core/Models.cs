@@ -21,6 +21,14 @@ public sealed record Game
     public string ManifestPath { get; init; } = "";
     public string CoverImage { get; set; } = "";
     public string HeroImage { get; set; } = "";
+    public string LogoImage { get; set; } = "";
+    public string CatalogId { get; set; } = "";
+    public string ArtworkProvider { get; set; } = "";
+    public string ArtworkCredits { get; set; } = "";
+    public string DiscoverySource { get; set; } = "";
+    public bool LibraryHidden { get; set; }
+    public bool CustomTitle { get; set; }
+    public DateTimeOffset? ArtworkChecked { get; set; }
     public string Description { get; set; } = "";
     public string Developer { get; set; } = "";
     public string Genres { get; set; } = "";
@@ -63,6 +71,8 @@ public sealed class ShellSettings
     public bool Fullscreen { get; set; } = true;
     public bool ConsoleMode { get; set; } = true;
     public bool FetchMetadata { get; set; } = true;
+    public bool ScanPortableGames { get; set; } = true;
+    public List<string> GameScanFolders { get; set; } = [];
     public bool AutomaticUpdates { get; set; } = true;
     public bool PreviewUpdates { get; set; } = true;
     public int IdleMinutes { get; set; } = 7;
@@ -94,16 +104,22 @@ public sealed class GameProfile
 public static class GameLibrary
 {
     public static bool IsGameTitle(string title) => !string.IsNullOrWhiteSpace(title) && !new[] { "Steamworks", "Redistributable", "SteamVR", "SDK", "Dedicated Server", "Epic Online Services", "EasyAntiCheat", "BattlEye", "Launcher", "Microsoft Visual C++", "DirectX" }.Any(x => title.Contains(x, StringComparison.OrdinalIgnoreCase)) && !Enum.GetValues<StoreKind>().Any(x => string.Equals(title, StoreNames.Name(x), StringComparison.OrdinalIgnoreCase));
-    public static IEnumerable<Game> Normalize(IEnumerable<Game> games) => games.Where(g => IsGameTitle(g.Title)).GroupBy(g => g.Id, StringComparer.OrdinalIgnoreCase).Select(g => g.First()).GroupBy(g => string.IsNullOrWhiteSpace(g.InstallPath) ? g.Id : Path.GetFullPath(g.InstallPath).TrimEnd(Path.DirectorySeparatorChar), StringComparer.OrdinalIgnoreCase).Select(g => g.OrderBy(x => x.Store == StoreKind.Standalone ? 1 : 0).First());
+    public static IEnumerable<Game> Normalize(IEnumerable<Game> games) => games.Where(g => IsGameTitle(g.Title)).GroupBy(g => g.Id, StringComparer.OrdinalIgnoreCase).Select(g => g.First()).GroupBy(g => string.IsNullOrWhiteSpace(g.InstallPath) ? g.Id : Path.GetFullPath(g.InstallPath).TrimEnd(Path.DirectorySeparatorChar), StringComparer.OrdinalIgnoreCase).SelectMany(group => group.Any(g=>g.Store!=StoreKind.Standalone)?group.Where(g=>g.Store!=StoreKind.Standalone).Take(1):group.GroupBy(g=>string.IsNullOrEmpty(g.Executable)?g.Id:Path.GetFullPath(g.Executable),StringComparer.OrdinalIgnoreCase).Select(g=>g.First()));
     public static IEnumerable<Game> Query(IEnumerable<Game> games, GameSort sort, GameFilter filter = GameFilter.All, string search = "", StoreKind? store = null)
     {
-        var q = games.Where(x => x.Installed && (store == null || x.Store == store) && x.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
+        var q = games.Where(x => x.Installed && !x.LibraryHidden && (store == null || x.Store == store) && x.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
         q = filter switch { GameFilter.Favorites => q.Where(x => x.Favorite), GameFilter.Controller => q.Where(x => x.ControllerSupport == true), GameFilter.LocalMultiplayer => q.Where(x => x.LocalMultiplayer == true), GameFilter.RecentlyInstalled => q.Where(x => x.InstalledDate > DateTimeOffset.Now.AddDays(-30)), _ => q };
         return sort switch { GameSort.MostPlayed => q.OrderByDescending(x => x.PlaySeconds).ThenBy(x => x.Title), GameSort.Alphabetical => q.OrderBy(x => x.Title), GameSort.InstallSize => q.OrderByDescending(x => x.InstallSize), GameSort.RecentlyInstalled => q.OrderByDescending(x => x.InstalledDate), _ => q.OrderByDescending(x => x.LastPlayed).ThenByDescending(x => x.PlaySeconds).ThenBy(x => x.Title) };
     }
     public static void MergeUserData(Game fresh, Game previous)
     {
         fresh.Favorite = previous.Favorite; fresh.LocalPlaySeconds = previous.LocalPlaySeconds;
+        fresh.LibraryHidden=previous.LibraryHidden;fresh.CustomTitle=previous.CustomTitle;if(previous.CustomTitle)fresh.Title=previous.Title;
+        fresh.ArtworkProvider=previous.ArtworkProvider;
+        fresh.LogoImage=File.Exists(fresh.LogoImage)?fresh.LogoImage:previous.LogoImage;fresh.ArtworkCredits=previous.ArtworkCredits;
+        fresh.ArtworkChecked=previous.CatalogId.Length==0&&fresh.CatalogId.Length>0?null:previous.ArtworkChecked;
+        if(previous.CatalogId.Length>0)fresh.CatalogId=previous.CatalogId;
+        if(previous.ArtworkProvider.Length>0){fresh.CoverImage=previous.CoverImage;fresh.HeroImage=previous.HeroImage;fresh.LogoImage=previous.LogoImage;}
         fresh.DetectedExecutable=previous.DetectedExecutable;
         fresh.ImportedPlaySeconds = previous.ImportedPlaySeconds;
         if (previous.LastPlayed > fresh.LastPlayed || fresh.LastPlayed == null) fresh.LastPlayed = previous.LastPlayed;

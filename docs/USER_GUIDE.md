@@ -103,3 +103,6 @@ See [docs/VALIDATION-0.4.1.md](VALIDATION-0.4.1.md) for this update, [docs/VALID
 Open an [issue](https://github.com/LielZ/Pame/issues) with your Pame version, Windows version, controller type, the affected store/game, and steps to reproduce. Remove personal data before sharing logs or screenshots.
 
 Dependency licenses, asset origins and trademarks are listed in [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) and [DEPENDENCIES.md](../DEPENDENCIES.md). Store and controller brands belong to their owners; Pame is an independent project.
+
+## Standalone games and artwork
+Use **Games > Find games** to scan drives or folders and review discoveries. Automatic scans include common game locations; Desktop and Downloads are watched for new extracted games. Use **Manage game > Artwork & game title** to choose the correct edition or rename a game. LaunchBox and Steam supply artwork without an account or API key. See [the discovery guide](GAME-DISCOVERY.md) for classic-game examples, local images and scan limits.

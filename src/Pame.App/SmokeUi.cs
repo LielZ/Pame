@@ -17,6 +17,7 @@ public partial class MainWindow
     }
     async Task SmokeUi()
     {
+        if(Environment.GetEnvironmentVariable("PAME_DISCOVERY_PROBE")=="1"){await SmokeDiscovery();return;}
         if(Environment.GetEnvironmentVariable("PAME_UPDATE_PROBE")=="1"){await SmokeUpdates();return;}
         if(Environment.GetEnvironmentVariable("PAME_RECOVERY_PROBE")=="1"){await SmokeRecovery();return;}
         if(Environment.GetEnvironmentVariable("PAME_PROJECT_PROBE")=="1"){await SmokeProject();return;}

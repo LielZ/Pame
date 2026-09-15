@@ -11,12 +11,14 @@ namespace Pame.App;
 public partial class MainWindow
 {
     TextBlock? heroTitle,heroDescription,heroInfo,heroStore;
+    Image? heroLogo;
     readonly Dictionary<string,TextBlock> playingBadges=[];
     void BuildHome()
     {
         selected??=GameLibrary.Query(games,sort).FirstOrDefault();SetBackdrop(selected);
         Place(page,Text(selected?.LastPlayed==null?"DISCOVER YOUR NEXT FAVORITE":"CONTINUE PLAYING",12,Color.FromRgb(119,197,248),FontWeights.Bold),258,104);
         heroTitle=Text(selected?.Title??"Your next game\nstarts here.",47,Colors.White,FontWeights.Bold);heroTitle.Width=888;heroTitle.Height=106;heroTitle.TextWrapping=TextWrapping.Wrap;heroTitle.TextTrimming=TextTrimming.None;heroTitle.LineHeight=50;heroTitle.LineStackingStrategy=LineStackingStrategy.BlockLineHeight;Place(page,heroTitle,254,136);
+        heroLogo=new Image{Width=680,Height=106,Stretch=Stretch.Uniform,HorizontalAlignment=HorizontalAlignment.Left};Place(page,heroLogo,258,136);
         heroStore=Text("",13,Color.FromRgb(170,201,226),FontWeights.SemiBold);Place(page,heroStore,259,252);
         heroDescription=Text("",17);heroDescription.Width=785;heroDescription.Height=49;heroDescription.TextWrapping=TextWrapping.Wrap;Place(page,heroDescription,259,284);
         var play=Button("Play now","hero:play",()=>{if(selected!=null)StartGame(selected);else Navigate("Games");});play.Content=new TextBlock{Text="Play now",FontSize=21,FontFamily=UiAssets.Font,FontWeight=FontWeights.SemiBold};play.Width=231;play.Height=55;play.Background=Brush("#E7F1FF");play.Foreground=Brush("#102233");Place(page,play,258,351);
@@ -53,6 +55,7 @@ public partial class MainWindow
         if(selected!=null)
         {
             if(heroTitle!=null){heroTitle.Text=selected.Title;heroTitle.FontSize=selected.Title.Length>36?40:47;}
+            if(heroLogo!=null){heroLogo.Source=LoadImage(selected.LogoImage,1100);heroLogo.Visibility=heroLogo.Source==null?Visibility.Collapsed:Visibility.Visible;if(heroTitle!=null)heroTitle.Visibility=heroLogo.Source==null?Visibility.Visible:Visibility.Collapsed;}
             if(heroStore!=null)heroStore.Text=selected.StoreName.ToUpperInvariant()+"   /   "+(selected.ControllerSupport==true?"CONTROLLER SUPPORTED":"INSTALLED ON YOUR PC");
             if(heroDescription!=null)heroDescription.Text=string.IsNullOrWhiteSpace(selected.Description)?"Your library, together in one place. Pick up your controller and jump in.":selected.Description;
             if(heroInfo!=null)heroInfo.Text=selected.PlaytimeText+"     ·     "+LastPlayed(selected);
@@ -93,7 +96,7 @@ public partial class MainWindow
         var sortButton=Button("Sort: "+SortName(sort),"games:sort",ShowSort);sortButton.Width=282;Place(page,sortButton,1248,159);
         var filterButton=Button("Filter: "+(storeFilter is StoreKind s?StoreNames.Name(s):FilterName(filter)),"games:filter",ShowFilters);filterButton.Width=295;Place(page,filterButton,259,260);
         var searchButton=Button("Search games","games:search",ShowSearch);searchButton.Content=UiAssets.Label("search","Search games",18);searchButton.Width=241;Place(page,searchButton,567,260);
-        var add=Button("Add game","games:add",()=>ShowFileBrowser(null));add.Content=UiAssets.Label("plus","Add game",18);Place(page,add,822,260);
+        var add=Button("Find games","games:add",ShowLibraryTools);add.Content=UiAssets.Label("search","Find games",18);Place(page,add,822,260);
         var refresh=Button("Refresh","games:refresh",()=>_=RefreshLibrary());refresh.Content=UiAssets.Label("refresh-cw","Refresh",18);Place(page,refresh,1020,260);
         if(filter!=GameFilter.All||storeFilter!=null||search!=""){var clear=Button("Clear filters","games:clear",()=>{filter=GameFilter.All;storeFilter=null;search="";Render();FocusFirst();});Place(page,clear,1214,260);}
         var wrap=new WrapPanel{Width=1275};foreach(var game in visible){var card=GameCard(game,191,274);card.Margin=new(0,0,18,24);wrap.Children.Add(card);}
@@ -114,6 +117,7 @@ public partial class MainWindow
     {
         SetBackdrop(game);Place(page,Text(game.StoreName.ToUpperInvariant()+"  /  GAME DETAILS",14,Color.FromRgb(138,203,249),FontWeights.Bold),260,114);
         var title=Text(game.Title,game.Title.Length>36?47:57,Colors.White,FontWeights.Bold);title.Width=910;title.TextWrapping=TextWrapping.Wrap;title.TextTrimming=TextTrimming.None;title.MaxHeight=154;Place(page,title,256,151);
+        if(LoadImage(game.LogoImage,1100) is { } gameLogo){title.Visibility=Visibility.Collapsed;Place(page,new Image{Source=gameLogo,Width=810,Height=140,Stretch=Stretch.Uniform,HorizontalAlignment=HorizontalAlignment.Left},260,152);}
         var description=Text(string.IsNullOrEmpty(game.Description)?"Installed on your PC and ready in your Pame library.":game.Description,22);description.Width=837;description.TextWrapping=TextWrapping.Wrap;description.MaxHeight=115;Place(page,description,260,318);
         var play=Button("▶   Play now","details:play",()=>StartGame(game));play.Width=260;play.Height=66;play.Background=Brush("#E7F1FF");play.Foreground=Brush("#111E2D");Place(page,play,260,455);
         var stop=Button("Stop","details:stop",ShowCloseGame);stop.Width=140;stop.Height=66;stop.Visibility=Visibility.Collapsed;Place(page,stop,540,455);
@@ -149,10 +153,11 @@ public partial class MainWindow
     void ShowManage(Game game)
     {
         var choices=new List<(string,Action)>();var store=stores.FirstOrDefault(s=>s.Kind==game.Store);
+        choices.Add(("Artwork & game title",()=>ShowGameArtwork(game)));
         if(store?.Installed==true)choices.Add(("Open "+store.Name,()=>{HideModal();OpenExternalStore(store);}));
         if(game.Store==StoreKind.Steam){choices.Add(("Verify game files",()=>Confirm("Verify "+game.Title+"?","Steam will check the installation and download any missing files.","Open Steam verification",()=>OpenExternalUri("steam://validate/"+game.StoreId))));}
         choices.Add(("Uninstall game",()=>{var plan=UninstallPlan.For(game);Confirm("Uninstall "+game.Title+"?",plan.Description,plan.CanExecute?"Continue in Steam":"Open store",()=>{Log.Write("game.uninstallHandoff",new{game.Id});if(plan.Uri!=null)OpenExternalUri(plan.Uri);else if(store?.Installed==true)OpenExternalStore(store);else OpenExternalUri("ms-settings:appsfeatures");});}));
-        if(game.Store==StoreKind.Standalone)choices.Add(("Remove from Pame library",()=>Confirm("Remove from library?","The game stays installed on your PC.","Remove",()=>{game.Installed=false;db.SaveGame(game);detail=null;Render();FocusFirst();})));
+        if(game.Store==StoreKind.Standalone)choices.Add(("Remove from Pame library",()=>Confirm("Remove from library?","The game files stay on your PC. Future scans keep this game hidden until you restore it in Find games.","Remove",()=>{game.LibraryHidden=true;db.SaveGame(game);detail=null;selected=null;Render();FocusFirst();})));
         ShowChoices("Manage "+game.Title,choices);
     }
     void ShowGameProfile(Game game)

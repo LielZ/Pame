@@ -34,3 +34,6 @@ Game titles, game/store logos, screenshots and artwork belong to their respectiv
 ## Development tools
 
 xUnit, Microsoft.NET.Test.Sdk and Inno Setup are used for tests/packaging, with their own licenses. Their repositories and development installations are not part of the app. Inno's generated installer engine is used under Inno Setup's distribution terms.
+
+## Game metadata sources
+Pame downloads the public LaunchBox Games Database catalog and selected artwork at runtime. LaunchBox / Unbroken Software and the game's respective rights holders retain their rights. No LaunchBox application, game files or catalog dump is bundled. Source pages are linked in Pame. Steam is an additional public artwork/metadata source. Neither requires an API key in Pame. See docs/GAME-DISCOVERY.md for sources and behavior.

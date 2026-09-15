@@ -36,7 +36,7 @@ public partial class MainWindow
         // Cancel is always the initial focus for destructive or system actions.
         ShowChoices(title,new (string,Action)[]{("Cancel",HideModal),(confirm,()=>{HideModal();action();})},description);
     }
-    void HideModal(){var pending=pendingBrowserConsent;pendingBrowserConsent=null;pending?.Invoke(false);keyboardText=null;keyboardBack=null;liveModalUpdate=null;searchEntry=null;modalLayer.Visibility=Visibility.Collapsed;modalLayer.Children.Clear();modalButtons.Clear();if(beforeModal!=null&&pageButtons.Contains(beforeModal))beforeModal.Focus();else FocusFirst();}
+    void HideModal(){portableScan?.Cancel();var pending=pendingBrowserConsent;pendingBrowserConsent=null;pending?.Invoke(false);keyboardText=null;keyboardBack=null;liveModalUpdate=null;searchEntry=null;modalLayer.Visibility=Visibility.Collapsed;modalLayer.Children.Clear();modalButtons.Clear();if(beforeModal!=null&&pageButtons.Contains(beforeModal))beforeModal.Focus();else FocusFirst();}
     void ShowSearch()
     {
         modalButtons.Clear();var body=new StackPanel();var entry=Text(search==""?"Type a game title…":search,28,Colors.White);searchEntry=entry;
@@ -69,7 +69,7 @@ public partial class MainWindow
                 {
                     var id="manual:"+Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(Path.GetFullPath(exe).ToUpperInvariant())))[..20];
                     var game=new Game{Id=id,Title=Path.GetFileNameWithoutExtension(exe),Store=StoreKind.Standalone,InstallPath=Path.GetDirectoryName(exe)!,Executable=exe,InstalledDate=DateTimeOffset.Now};
-                    games.RemoveAll(g=>g.Id==id);games.Add(game);db.SaveGame(game);Navigate("Games");Toast(game.Title+" added to your library.");
+                    _=ImportPortable([game]);
                 })));
             }
         }

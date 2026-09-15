@@ -89,7 +89,7 @@ public partial class MainWindow : Window
         Loaded+=async(_,_)=>
         {
             if(!safeMode){controllers.Initialize();sensors.Start();}inputTimer.Start();clockTimer.Start();performance.Start();
-            Render();_=InitializeUpdates();await ApplyConsoleMode();await RefreshLibrary();if(safeMode)Toast("Recovery mode · controller polling and fullscreen are off. Explorer is available.");
+            Render();_=InitializeUpdates();WatchGameFolders();await ApplyConsoleMode();await RefreshLibrary();if(safeMode)Toast("Recovery mode · controller polling and fullscreen are off. Explorer is available.");
             if(Environment.GetEnvironmentVariable("PAME_BENCHMARK") is {Length:>0} benchmark)await BenchmarkUi(benchmark);
             else if(smoke)await SmokeUi();
             else if(launchGameId!=null&&games.FirstOrDefault(g=>g.Id==launchGameId) is { } requestedGame)await LaunchGameAsync(requestedGame);
@@ -118,6 +118,7 @@ public partial class MainWindow : Window
         if(closing)return;e.Cancel=true;closing=true;desktop.Enabled=false;desktopHint?.Close();notificationWindow?.Close();pendingBrowserConsent?.Invoke(false);pendingBrowserConsent=null;browser?.Dispose();inputTimer.Stop();clockTimer.Stop();lifetime.Cancel();
         await Task.Yield();await sessions.StopTrackingAsync();await backgroundMode.End();backgroundMode.CloseServiceAccess();try{await consoleShell.LeaveAsync();}catch(Exception error){Log.Error("desktop.exitRecovery",error);}await presentMon.StopAsync();overlay?.Close();bluetooth.Dispose();controllers.Dispose();performance.Dispose();sensors.Dispose();metadata.Dispose();audio.Dispose();sound.Dispose();sessions.Dispose();optimization.Recover();SaveSettings();db.Dispose();
         updater?.Dispose();
+        foreach(var watcher in gameFolderWatchers)watcher.Dispose();
         if(hwnd!=null){UnregisterHotKey(hwnd.Handle,1);UnregisterHotKey(hwnd.Handle,2);}
         Close();
     }
@@ -128,11 +129,19 @@ public partial class MainWindow : Window
         {
             var previous=db.LoadGames();if(games.Count==0){games=previous;selected=GameLibrary.Query(games,sort).FirstOrDefault();await WarmArtwork(games);if(closing)return;Render();}
             var result=await discovery.ScanAsync(lifetime.Token);stores=result.Stores;scanWarnings=result.Warnings;
+            if(settings.ScanPortableGames && !smoke)
+            {
+                statusLine.Text="Looking for portable games…";
+                await metadata.Catalog.EnsureAsync(settings.FetchMetadata,lifetime.Token,new Progress<string>(s=>statusLine.Text=s));
+                var portable=await new PortableDiscovery().ScanAsync(PortableDiscovery.DefaultRoots().Concat(settings.GameScanFolders??[]),result.Games,null,lifetime.Token,30000,metadata.Catalog);
+                result.Games.AddRange(portable.Candidates.Select(c=>c.Game));
+                if(portable.Limited)scanWarnings.Add("Portable scan reached its limit. Scan a specific folder to continue.");
+            }
             foreach(var game in result.Games){var old=previous.FirstOrDefault(x=>x.Id==game.Id);if(old!=null)GameLibrary.MergeUserData(game,old);}
             // Keep manually added games and historical entries for temporarily disconnected drives.
             var ids=result.Games.Select(g=>g.Id).ToHashSet();
             foreach(var old in previous.Where(g=>!ids.Contains(g.Id))){old.Installed=old.Store==StoreKind.Standalone&&File.Exists(old.Executable);result.Games.Add(old);}
-            games=result.Games;
+            games=GameLibrary.Normalize(result.Games).ToList();
             var imported=await Task.Run(DiscoveryService.SteamPlaytime);
             foreach(var game in games)if(imported.TryGetValue(game.Id,out var seconds)&&game.ImportedPlaySeconds==0&&game.LocalPlaySeconds==0)game.ImportedPlaySeconds=seconds;
             db.SaveGames(games);selected=GameLibrary.Query(games,sort).FirstOrDefault();await WarmArtwork(games);if(closing)return;Render();FocusFirst();
@@ -148,7 +157,7 @@ public partial class MainWindow : Window
         }
         catch(OperationCanceledException){}
         catch(Exception e){Log.Error("library.refresh",e);Toast("Couldn't refresh the library. "+e.Message);}
-        finally{scanning=false;statusLine.Text=$"{games.Count(g=>g.Installed)} games · {stores.Count(s=>s.Installed)} stores";}
+        finally{scanning=false;statusLine.Text=$"{games.Count(g=>g.Installed&&!g.LibraryHidden)} games · {stores.Count(s=>s.Installed)} stores";}
     }
     void SaveSettings(){settings.Sort=sort.ToString();db.Set("shell",settings);}
     void UpdateControllerLine()
@@ -160,6 +169,7 @@ public partial class MainWindow : Window
     }
     void UpdateMetrics()
     {
+        CheckGameFolderChanges();
         var p=performance.Current;metrics.Text=$"CPU  {(p.Cpu is double c?$"{c:0}%":"—")}       GPU  {(p.Gpu is double g?$"{g:0}%":"—")}       RAM  {(p.TotalRamGb>0?$"{p.RamPercent:0}%":"—")}";
         networkText.Text="●  "+p.Network;
         UpdateHomeStatus();
@@ -195,7 +205,7 @@ public partial class MainWindow : Window
         Place(chrome,new Border{Width=1600,Height=46,Background=Brush("#F20B1520"),BorderBrush=Brush("#263846"),BorderThickness=new(0,1,0,0)},0,854);
         RefreshHints();Place(chrome,footerHints,26,861);
         var guideHint=UiAssets.Label("gamepad-2","Hold Guide / PS for quick menu",14,24);guideHint.Opacity=.74;Place(chrome,guideHint,1250,865);
-        statusLine.Text=sessions.ActiveGame!=null?sessions.Status:scanning?"Refreshing your library…":$"{games.Count(g=>g.Installed)} games · {stores.Count(s=>s.Installed)} stores";Place(chrome,statusLine,255,35);
+        statusLine.Text=sessions.ActiveGame!=null?sessions.Status:scanning?"Refreshing your library…":$"{games.Count(g=>g.Installed&&!g.LibraryHidden)} games · {stores.Count(s=>s.Installed)} stores";Place(chrome,statusLine,255,35);
     }
     Button Button(string title,string id,Action action,bool modal=false)
     {
@@ -220,7 +230,7 @@ public partial class MainWindow : Window
     int HeroPixelWidth=>(int)Math.Clamp(Math.Ceiling(ActualWidth*VisualTreeHelper.GetDpi(this).DpiScaleX/640)*640,1920,3840);
     async Task WarmArtwork(IEnumerable<Game> library)
     {
-        var requests=GameLibrary.Query(library,GameSort.RecentlyPlayed).Take(32).SelectMany(g=>new[]{(g.CoverImage,440),(g.CoverImage,550),(g.HeroImage,HeroPixelWidth),(g.HeroImage,600)}).Where(r=>File.Exists(r.Item1)).Distinct().Where(r=>!images.ContainsKey(Path.GetFullPath(r.Item1)+"|"+r.Item2)).ToArray();
+        var requests=GameLibrary.Query(library,GameSort.RecentlyPlayed).Take(32).SelectMany(g=>new[]{(g.CoverImage,440),(g.CoverImage,550),(g.HeroImage,HeroPixelWidth),(g.HeroImage,600),(g.LogoImage,1100)}).Where(r=>File.Exists(r.Item1)).Distinct().Where(r=>!images.ContainsKey(Path.GetFullPath(r.Item1)+"|"+r.Item2)).ToArray();
         if(requests.Length==0)return;
         var decoded=await Task.Run(()=>requests.Select(r=>{try{return (Key:Path.GetFullPath(r.Item1)+"|"+r.Item2,Image:DecodeArtwork(r.Item1,r.Item2));}catch(Exception e){Log.Error("image.preload",e);return (Key:"",Image:(BitmapImage?)null);}}).ToArray(),lifetime.Token);
         if(closing)return;if(images.Count>150)images.Clear();foreach(var entry in decoded)if(entry.Image!=null)images[entry.Key]=entry.Image;

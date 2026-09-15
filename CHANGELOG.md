@@ -1,5 +1,13 @@
 # Pame 0.4.2
 
+## 0.4.3 - Games beyond stores
+
+- Find standalone and extracted portable Windows games using engine data, executable details and a local game catalog.
+- Scan the PC or selected folders, review results, preserve hidden games, and watch Desktop/Downloads for changes.
+- Use the free LaunchBox Games Database without accounts or API keys, with Steam and local images as additional sources.
+- Show game logos, correct artwork matches and rename games entirely with a controller.
+- Preserve histories and preferences when rescanning and upgrading.
+
 - Add Settings → Updates with automatic GitHub release checks, verified background downloads, installation at the next Pame startup and a controller-operated Restart & update action.
 - Offer automatic/manual updates and public-alpha/stable release choices. Defer updates during Pame game sessions; cancel active downloads when launching a game.
 - Validate release versions, repository URLs, HTTPS redirects, file sizes and SHA-256 against both GitHub asset digests and the release checksum file.

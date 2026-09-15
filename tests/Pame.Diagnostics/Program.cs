@@ -2,12 +2,33 @@ using Pame.Core;
 using Pame.Windows;
 using System.Text.Json;
 
+if(args.FirstOrDefault()=="--snapshot")
+{
+    using var connection=new Microsoft.Data.Sqlite.SqliteConnection(new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder{DataSource=Path.Combine(Path.GetFullPath(args[1]),"pame.db"),Mode=Microsoft.Data.Sqlite.SqliteOpenMode.ReadOnly,Pooling=false}.ToString());connection.Open();
+    using var query=connection.CreateCommand();query.CommandText="SELECT json FROM settings WHERE key='shell'";var settings=JsonSerializer.Deserialize<ShellSettings>((string)query.ExecuteScalar()!);
+    query.CommandText="SELECT json FROM games";using var rows=query.ExecuteReader();var games=new List<Game>();while(rows.Read())games.Add(JsonSerializer.Deserialize<Game>(rows.GetString(0))!);
+    var snapshot=new{settings,games=games.OrderBy(g=>g.Id).Select(g=>new{g.Id,g.Favorite,g.ImportedPlaySeconds,g.LocalPlaySeconds,g.LastPlayed})};
+    await File.WriteAllTextAsync(args[2],JsonSerializer.Serialize(snapshot));Console.WriteLine("Saved local preference/library snapshot.");return;
+}
+if(args.FirstOrDefault()=="--discover")
+{
+    var output=Path.GetFullPath(args[1]);Directory.CreateDirectory(output);Log.DirectoryPath=Path.Combine(output,"logs");
+    var known=await new DiscoveryService().ScanAsync();
+    await File.WriteAllTextAsync(Path.Combine(output,"stores.json"),JsonSerializer.Serialize(known));
+    using var art=new MetadataService(output);if(args.Length>3)await art.Catalog.ImportArchiveAsync(args[3]);else await art.Catalog.EnsureAsync(true);
+    var portable=await new PortableDiscovery().ScanAsync(args.Length>2?[Path.GetFullPath(args[2])]:DriveInfo.GetDrives().Where(d=>d.IsReady&&d.DriveType==DriveType.Fixed).Select(d=>d.Name),known.Games,catalog:art.Catalog);
+    await File.WriteAllTextAsync(Path.Combine(output,"discovery.json"),JsonSerializer.Serialize(portable,new JsonSerializerOptions{WriteIndented=true}));
+    var game=new Game{Id="probe:portable",Title=args.Length>4?args[4]:"ELDEN RING",Store=StoreKind.Standalone};await art.EnrichAsync(game);
+    await File.WriteAllTextAsync(Path.Combine(output,"artwork.json"),JsonSerializer.Serialize(new{game.Title,game.MetadataAppId,cover=File.Exists(game.CoverImage),hero=File.Exists(game.HeroImage),logo=File.Exists(game.LogoImage),art.LastNotice},new JsonSerializerOptions{WriteIndented=true}));
+    Console.WriteLine($"Found {portable.Candidates.Count} standalone candidates in {portable.Folders} folders; limited={portable.Limited}. Standalone artwork: {File.Exists(game.CoverImage)}/{File.Exists(game.HeroImage)}/{File.Exists(game.LogoImage)}");return;
+}
 if(args.FirstOrDefault()=="--update")
 {
     var updateRoot=Path.GetFullPath(args[1]);Directory.CreateDirectory(updateRoot);Log.DirectoryPath=Path.Combine(updateRoot,"logs");
     using var updates=new UpdateService(updateRoot);
     var release=await updates.CheckAsync(Version.Parse(args[2]),true)??throw new Exception("No newer public release found.");
-    var pending=await updates.DownloadAsync(release);
+    var pending=await updates.ReadPendingAsync(Version.Parse(args[2]),true);
+    if(pending?.Release!=release)pending=await updates.DownloadAsync(release);
     await File.WriteAllTextAsync(Path.Combine(updateRoot,"download-report.json"),JsonSerializer.Serialize(new{release.Version,pending.Sha256,release.Installer.Size,verified=await UpdateService.VerifyFileAsync(updates.InstallerPath(release),release.Installer.Size,pending.Sha256)}));
     if(args.Length>3)await UpdateInstaller.StartAsync(updates,pending,Path.GetFullPath(args[3]));
     Console.WriteLine("Verified GitHub update: "+release.Version);return;

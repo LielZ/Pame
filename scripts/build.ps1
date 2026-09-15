@@ -16,6 +16,7 @@ try {
     Copy-Item -LiteralPath docs/VALIDATION-0.4.0.md,docs/WEBVIEW2-SOURCE.json -Destination dist/app/docs
     Copy-Item -LiteralPath docs/VALIDATION-0.4.1.md -Destination dist/app/docs
     Copy-Item -LiteralPath docs/VALIDATION-0.4.2.md,docs/UPDATER.md,docs/USER_GUIDE.md -Destination dist/app/docs
+    Copy-Item -LiteralPath docs/VALIDATION-0.4.3.md,docs/GAME-DISCOVERY.md -Destination dist/app/docs
     Copy-Item -LiteralPath docs/images -Destination dist/app/docs -Recurse -Force
     Copy-Item -LiteralPath licenses -Destination dist/app -Recurse -Force
     if ($Package) {

@@ -84,7 +84,8 @@ public partial class MainWindow
         Setting("Console mode","Hide the taskbar and desktop icons. Use game artwork while playing.",settings.ConsoleMode?"On":"Off","console",()=>{settings.ConsoleMode=!settings.ConsoleMode;SaveSettings();_=ApplyConsoleMode();Render(true);});
         Setting("Gaming mode","Use the high performance power plan while playing. Restore it afterwards.",settings.GamingMode?"On":"Off","gaming",()=>{settings.GamingMode=!settings.GamingMode;SaveSettings();Render(true);});
         Setting("Background activity","Close selected apps and reduce background work while playing. Restore afterwards.",settings.BackgroundMode.Enabled?"On · choose apps & services":"Off","background",ShowBackgroundOptions);
-        Setting("Artwork & metadata","Download game art from Steam and keep a local cache.",settings.FetchMetadata?"Automatic":"Offline","metadata",()=>{settings.FetchMetadata=!settings.FetchMetadata;SaveSettings();Render(true);if(settings.FetchMetadata)_=RefreshLibrary();});
+        Setting("Artwork & metadata","Covers, backgrounds and game logos from LaunchBox and Steam. No API key needed.",settings.FetchMetadata?"Automatic":"Offline","metadata",ShowArtworkSettings);
+        Setting("Game discovery","Find standalone and portable games anywhere on your PC.",settings.ScanPortableGames?"Automatic scan on":"Manual scans","discovery",ShowLibraryTools);
         Setting("Look & sound","Button images, navigation sounds and comfortable motion.","Personalize Pame","appearance",ShowAppearance);
         Setting("Desktop control","Use your controller as a pointer in Windows and stores.","Open desktop mode","desktop",ToggleDesktopControl);
         Setting("Sound","Change volume and see your current output.",audio.Volume+"%","audio",ShowAudio);

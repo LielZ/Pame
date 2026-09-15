@@ -1,4 +1,4 @@
-#define AppVersion "0.4.2"
+#define AppVersion "0.4.3"
 [Setup]
 AppId={{C031CF79-A16D-4975-8581-5CC3C736CE85}
 AppName=Pame
@@ -23,7 +23,7 @@ SetupIconFile=..\src\Pame.App\Assets\pame.ico
 CloseApplications=yes
 RestartApplications=no
 SetupLogging=yes
-VersionInfoVersion=0.4.2.0
+VersionInfoVersion=0.4.3.0
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop shortcut"; Flags: checkedonce
